@@ -64,10 +64,6 @@
         <p class="person"> OBRERO </p>
       </div>
 
-      <ul class="list-group">
-        <li class="list-group-item" ng-repeat="member in memberList"> {$ member.name $}</li>
-      </ul>
-
 
     </div>
   <!-- Form to create new month -->
@@ -84,7 +80,7 @@
       <!-- BEGIN CONTENT DETAILS -->
       <div id="create_body">
         <!-- BEGIN FORM -->
-        <form class="form-horizontal" name="newMonthForm" accept-charset="UTF-8" autocomplete="off">
+        <form class="form-horizontal" name="newMonthForm" accept-charset="UTF-8" autocomplete="off" novalidate>
 
           <div class = "form-group form-group-sm">
             <label class="col-sm-1 control-label" for="set_month">Mes</label>
@@ -131,7 +127,7 @@
       <!-- BEGIN CONTENT DETAILS -->
       <div id="create_body">
         <!-- BEGIN FORM -->
-        <form class="form-horizontal" name="newEventForm" accept-charset="UTF-8" autocomplete="off">
+        <form class="form-horizontal" name="newEventForm" accept-charset="UTF-8" autocomplete="off" novalidate>
 
           <!-- ID -->
           <div class="form-group form-group-sm">
