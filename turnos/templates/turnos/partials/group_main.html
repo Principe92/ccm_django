@@ -28,53 +28,41 @@
     <!-- BEGIN CONTENT DETAILS -->
     <div id="create_body">
       <!-- BEGIN FORM -->
-      <form name="groupForm"  accept-charset="UTF-8" autocomplete="off" novalidate>
+      <form class="form-horizontal" name="groupForm"  accept-charset="UTF-8" autocomplete="off">
 
-        <div class="form_row">
-          {{ form.title.label_tag }} {{ form.title }}
-          {%if form.title.errors %}
-            <div class="error">
-              {{ form.title.errors }}
-            </div>
-          {% endif %}
+        <div class="form-group form-group-sm">
+          <label class="col-sm-1 control-label" for="group_name"> Titulo:</label>
+          <div class="col-xs-4 col-sm-2">
+            <input type="text" ng-model="group_name" id="group_name" class="form-control input-sm" ng-required="true">
+          </div>
         </div>
 
-        <!-- ROLE BOX -->
-        <div class="form_row">
-            <legend class="form_label" for="id_roles">Roles:</legend>
+        <div class="form-group form-group-sm">
+          <label class="col-sm-1 control-label"> Roles: </label>
+          <div class="form-inline">
 
-            <div class="rol_box">
-              {{ form.newRole_1 }}
-              {%if form.newRole_1.errors %}
-                <div class="error">
-                  {{ form.newRole_1.errors }}
-                </div>
-              {% endif %}
+            <div class="col-xs-4 col-sm-2">
+              <input type="text" ng-model="group_rol_1" id="group_rol_1" class="form-control input-sm" placeholder="introduce un rol">
             </div>
 
-            <div class="rol_box">
-              {{ form.newRole_2 }}
-              {%if form.newRole_2.errors %}
-                <div class="error">
-                  {{ form.newRole_2.errors }}
-                </div>
-              {% endif %}
+            <div class="col-xs-4 col-sm-2">
+              <input type="text" ng-model="group_rol_2" id="group_rol_2" class="form-control input-sm" placeholder="introduce un rol">
             </div>
 
-            <div class="rol_box">
-              {{ form.newRole_3 }}
-              {%if form.newRole_3.errors %}
-                <div class="error">
-                  {{ form.newRole_3.errors }}
-                </div>
-              {% endif %}
+            <div class="col-xs-4 col-sm-2">
+              <input type="text" ng-model="group_rol_3" id="group_rol_3" class="form-control input-sm" placeholder="introduce un rol">
             </div>
+
+          </div>
         </div>
+
 
         <!-- BUTTON BOX -->
-        <div class="form_row">
-            <button type="submit" ng-click="submitForm()">Crear</button>
-            <button type="button" ng-click="clearForm()">Cancelar</button>
+        <div class="form-group">
+          <div class="col-sm-offset-1 col-sm-10">
+            <button type="submit" class="btn btn-primary btn-sm" ng-click="submitForm()">Crear</button>
+            <button type="button" class="btn btn-sm btn-danger" ng-click="clearForm()">Cancelar</button>
+          </div>
         </div>
       </form>
       <!-- END FORM -->
@@ -87,75 +75,50 @@
 <!-- END CREATE NEW BOX -->
 
 <!-- BEGIN DEPARTMENT LIST -->
-<div class="create_box dpt_list">
-  <div class="create_content">
-    <!-- BEGIN CONTENT HEADER -->
-    <h1 class="create_title">
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h1 class="panel-title">
       DEPARTAMENTOS
     </h2>
-    <!-- END CONTENT HEADER -->
-
-    <!-- BEGIN LIST HEADER -->
-    <div class="row_item table_head">
-      <!-- SELECT BOX -->
-      <div class="row_select">
-        <input id="role" type="checkbox" value="all_roles"></input>
-      </div>
-
-      <!-- ROL ID -->
-      <h1 class="row_text id"> ID </h1>
-
-      <!-- ROL TITLE -->
-      <h1 class="row_text"> NOMBRE </h1>
-
-      <!-- ROL MEMBER -->
-      <h1 class="row_text "> MIEMBROS </h1>
-
-      <!-- ROL LAST TURN -->
-      <h1 class="row_text"> ULTIMO TURNO </h1>
-    </div>
-    <!-- END LIST HEADER -->
-
-    <!-- BEGIN OF LIST -->
-      <div class="row_item" ng-repeat="group in groups">
-        <!-- SELECT BOX -->
-        <div class="row_select">
-          <input id="id_choose" type="checkbox" value="{$ group.id $}"></input>
-        </div>
-
-        <!-- GROUP ID -->
-        <div class="row_text id">
-          {$ group.id $}
-        </div>
-
-        <!-- GROUP TITLE -->
-        <div class="row_text">
-          {$ group.title $}
-        </div>
-
-        <!-- GROUP MEMBER COUNT -->
-        <div class="row_text">
-          {$ group.person_set.all.count $}
-        </div>
-
-        <!-- GROUP LAST SCHEDULE -->
-        <div class="row_text">
-          Enero
-        </div>
-
-        <!-- PERSON MORE INFORMATION -->
-        <div class="row_action">
-          <a id="id_create" href="/ccm/department/{$ group.id $}/members/">
-            <div class="action_button">
-                <img class="action_image" width="24" height="24" src="/static/admin/img/ic_info_outline_white_18dp.png"></img>
-                <div class="action_text">Ver ficha</div>
-            </div>
-          </a>
-        </div>
-      </div>
-
-    <!-- END OF LIST -->
   </div>
-</div>
+
+  <table class="table">
+    <tr>
+      <th>
+        <input id="id_choose" type="checkbox" value="all_rows"></input>
+      </th>
+      <th> ID </th>
+      <th> NOMBRE </th>
+      <th> MIEMBROS </th>
+      <th> ULTIMO TURNO </th>
+    </tr>
+
+    <tr ng-repeat="group in groups">
+      <td>
+        <input id="id_choose" type="checkbox" value="{$ group.id $}"></input>
+      </td>
+
+      <td>
+        {$ group.id $}
+      </td>
+
+      <td>
+        <a id="id_create" href="/ccm/department/{$ group.id $}/members/">
+          {$ group.title $}
+        </a>
+      </td>
+
+      <td>
+        null
+      </td>
+
+      <td>
+        null
+      </td>
+    </tr>
+  </table>
+
+  </div>
+  
 <!-- END DEPARTMENT LIST -->
 </div>
