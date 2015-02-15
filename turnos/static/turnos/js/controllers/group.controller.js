@@ -231,14 +231,27 @@ function GroupJSControl($rootScope, $scope, $http, Groups, $log, groupList) {
   function clear(new_group){
     //make the record pristine
     $scope.groupForm.$setPristine();
-    $scope.new_group = angular.copy(defaultForm);
+    $scope.group_name = null;
+    $scope.group_rol_1 = null;
+    $scope.group_rol_2 = null;
+    $scope.group_rol_3 = null;
+    //$scope.new_group = angular.copy(defaultForm);
   }
 
 
 
   function submit(){
   // $scope.closeDialog();
-    Groups.create($scope.new_group).then(createSuccessFn, createErrorFn);
+  var data = {
+    'title' : $scope.group_name,
+    'newRole_1' : $scope.group_rol_1,
+    'newRole_2' : $scope.group_rol_2,
+    'newRole_3' : $scope.group_rol_3
+    }
+
+    console.log('new Month: ' , data);
+
+    //Groups.create($scope.new_group).then(createSuccessFn, createErrorFn);
   }
 
    /**
