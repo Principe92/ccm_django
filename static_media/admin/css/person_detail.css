@@ -1,0 +1,59 @@
+.details_box{
+  margin: 8px;
+  padding: 4px;
+  background-color: white;
+  min-height: 1065px;
+}
+
+.inner_content{
+  padding: 0px 4px 4px 4px;
+}
+
+.person_image{
+  height: 170px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  border-bottom: 0.1em solid #FF5722;
+}
+
+.person_name{
+  text-align: center;
+  vertical-align: middle;
+  font-size: 24px;
+  font-family: 'robotolight';
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.row_top{
+  display: block;
+}
+
+.row_title{
+  width: 7em;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.extra_content{
+  display: block;
+  margin-left: 7em;
+}
+
+.row_action{
+  display: inline-block;
+  float: right;
+  margin-right: 16px;
+}
+
+.row{
+  min-height: 32px;
+  margin: 4px 16px;
+  padding: 8px 16px;
+  overflow: hidden;
+  font-family: robotolight;
+  font-size: 12px;
+  background-color: #B2DFDB;
+  line-height: 0.5em !important;
+  vertical-align: middle;
+}

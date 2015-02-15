@@ -1,0 +1,104 @@
+/* LOGIN FORM */
+@import url("admin/css/main.css");
+
+
+body{
+    background-color: #424242 !important;
+}
+
+#login_container{
+  margin: 3em auto 0px auto;
+  width: 500px;
+  height: 100%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #FF5722;
+}
+
+#app_img{
+  display: block;
+  height: auto;
+  width: 200px;
+  margin: 8px auto;
+}
+
+.required{
+  font-weight: bold;
+}
+
+.error{
+  display: inline-block;
+  color: red;
+  font-family: 'robotolight';
+  font-weight: bold;
+  font-size: 12px;
+  text-align: center;
+}
+
+.error_list{
+  display: block;
+}
+
+.error_item{
+  display: block !important;
+  text-align: left !important;
+}
+
+#app_name{
+  font-family: 'robotolight';
+  font-style: normal;
+  font-weight: 300;
+  line-height: 16px;
+  color: white;
+  font-size: 2em;
+  text-align: center;
+}
+
+#content_main{
+  margin: 16px 4em;
+  padding: 16px 32px;
+}
+
+.form_row {
+    padding: 4px;
+    float: left;
+    width: 100%;
+    margin: 8px 0px;
+}
+
+.form_action{
+  text-align: center;
+}
+
+.form_label {
+  line-height: 2em;
+  font-size: 0.8em;
+  clear: both;
+  color: white;
+}
+
+input[type=text], input[type=password]{
+  display: block;
+  width: 28em;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.form_row #id_username, .form_row #id_password {
+    clear: both;
+}
+
+.login span.help {
+    font-size: 10px;
+    display: block;
+}
+
+.login .submit-row {
+    clear: both;
+    padding: 1em 0 0 9.4em;
+}
+
+.login .password-reset-link {
+    text-align: center;
+}

@@ -1,0 +1,168 @@
+{% load admin_static %}
+{% load firstof from future %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+  <base href="/">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="{% static "djangular/css/bootstrap3.css" %}">
+  <link rel="stylesheet" type="text/css" href="{% static "admin/css/animation.css" %}" />
+  <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}" />
+  <link rel="stylesheet" type="text/css" href="{% block mainsheet %}{% static "admin/css/main.css" %}{% endblock %}" />
+  <link rel="stylesheet" type="text/css" charset="utf-8" href="{% block fontsheet %}{% static "admin/css/fonts.css" %}{% endblock %}" />
+  <link rel="stylesheet" type="text/css" charset="utf-8" href="{% block colorsheet %}{% static "admin/css/colors.css" %}{% endblock %}" />
+  {% block extrastyle %}{% endblock %}
+  <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="{% block stylesheet_ie %}{% static "admin/css/ie.css" %}{% endblock %}" /><![endif]-->
+  {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
+  <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";</script>
+  <script type="text/javascript">window.__admin_utc_offset__ = "{% filter escapejs %}{% now "Z" %}{% endfilter %}";</script>
+  {% include 'admin/js.html' %}
+  {% block extrahead %}{% endblock %}
+  {% block blockbots %}
+    <meta name="robots" content="NONE,NOARCHIVE" />
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+  {% endblock %}
+</head>
+{% load i18n %}
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
+  <div id="main" ng-app="{% block app %}turnos{% endblock app%}">
+
+    <!-- BEGIN MIDDLE CONTENT BOX -->
+    <div id="middle-content">
+      <!-- BEGIN PAGE CONTENT -->
+      <div id="page-container">
+        {% block page_container %}
+
+        {% if user.is_active and user.is_staff  and not is_popup %}
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+            {% block nav-global %}{% endblock %}
+
+            </div>
+          </div>
+        </nav>
+        {% endif %}
+
+          <!-- Content -->
+          <div id="content">
+            {% block pretitle %}{% endblock %}
+            {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+            {% block content %}
+            {% block object-tools %}{% endblock %}
+            {{ content }}
+            {% endblock %}
+          </div>
+          {% endblock %}
+        </div>
+        <!-- END PAGE CONTENT -->
+      </div>
+      <!-- END MIDDLE CONTENT -->
+
+      <!-- BEGIN LEFT CONTENT BOX-->
+      {% if user.is_active and user.is_staff %}
+      <div id="left-content">
+        <!-- BEGIN LEFT NAVIGATION BAR CONTENT -->
+        <div id="left_nav">
+          <h1 id="name">AUDIOVISUAL</h1>
+          <div id="nav_icons">
+            <a href="{% url 'admin:index' %}"><img id = "icon_home" class="actionbar_icon" src="/static/admin/img/ic_home_white_18dp.png"></img></a>
+            <a href="{% url 'admin:logout' %}"><img id = "icon_logout" class="actionbar_icon" src="/static/admin/img/ic_settings_power_white_18dp.png"></img></a>
+          </div>
+        </div>
+
+        <div id="inner">
+          <div id="top">
+            <div id="user_photo_box">
+              <img width="80" height="80" src="/static/admin/img/ic_account_circle_white_48dp.png"></img>
+            </div>
+            <div id="user_info">
+              <div id="user_name"> {% firstof user.get_short_name user.get_username %}</div>
+              <div id="user_status">
+                <p><img id="user_status_img" src="/static/admin/img/ic_verified_user_white_18dp.png"></img>
+                  <span style="color: white;">Online</span></p>
+                </div>
+              </div>
+            </div>
+
+          <div id="middle">
+            <!-- {% block branding %}{% endblock %} -->
+            {% block sidebar %}{% endblock %}
+
+            <p id="menu_header">MENU</p>
+            <ul>
+              <!-- row 1 -->
+              <li>
+                <a href="{% url 'controls' %}">
+                  <div class="menu_element">
+                    <p>
+                      <img class="menu_icon actionbar_icon" src="/static/admin/img/ic_settings_white_18dp.png"></img>
+                      <span style="color: white;">Panel de control</span>
+                    </p>
+                  </div>
+                </a>
+              </li>
+
+              <!-- row 2 -->
+              <li>
+                <a href="{% url 'turns' %}">
+                  <div class="menu_element">
+                    <p>
+                      <img class="menu_icon actionbar_icon" src="/static/admin/img/ic_event_available_white_18dp.png"></img>
+                      <span style="color: white;">Turnos</span>
+                    </p>
+                  </div>
+                </a>
+              </li>
+
+              <!-- row 3 -->
+              <li>
+                <a href="{% url 'ccm:group_listView' %}">
+                  <div class="menu_element">
+                    <p><img class="menu_icon actionbar_icon" src="/static/admin/img/ic_group_work_white_18dp.png"></img>
+                      <span style="color: white;">Departamento</span>
+                    </p>
+                  </div>
+                </a>
+              </li>
+
+              <!-- row 3 -->
+              <li>
+                <a href="{% url 'person_index' %}">
+                  <div class="menu_element">
+                    <p><img class="menu_icon actionbar_icon" src="/static/admin/img/ic_person_white_18dp.png"></img>
+                      <span style="color: white;">Personas</span>
+                    </p>
+                  </div>
+                </a>
+              </li>
+
+              <!-- row 4 -->
+              <li>
+                <a href="{% url 'role_index' %}">
+                  <div class="menu_element">
+                    <p><img class="menu_icon actionbar_icon" src="/static/admin/img/ic_assignment_white_18dp.png"></img>
+                      <span style="color: white;">Roles</span>
+                    </p>
+                  </div>
+                </a>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <!-- END LEFT CONTENT -->
+      <!-- FOOTER CONTENT -->
+      {% block footer %}<div id="footer"></div>{% endblock %}
+    </div>
+    <!-- END OF MAIN -->
+   </div>
+   <!-- END OF BODY -->
+</body>
+</html>

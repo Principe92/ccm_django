@@ -1,0 +1,64 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/person_create.css" %}" />{% endblock %}
+
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+{{ media }}
+{% endblock extrahead %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} person_create{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<!-- BEGIN CREATE NEW BOX -->
+<div class="create_box">
+  <!-- BEGIN FORM -->
+  <div class="form_style">
+    <form id="add_person" novalidate="" method="post" enctype="multipart/form-data" action="" autocomplete="off">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <!-- UPLOAD PERSON IMAGE -->
+      <div class="form_image">
+
+      </div>
+
+      {% for form_row in form %}
+      <div class="form_row">
+          {{ form_row.label_tag }} {{ form_row }}
+        {%if form_row.errors %}
+          <div class="error">
+            {{ form_row.errors }}
+          </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <!-- BUTTON BOX -->
+      <div class="form_button">
+        <input id="id_save" name="save" class="action_button" type="submit" value="Guardar"></input>
+        <input id="id_cancel" name="cancel" class="action_button" type="submit" value="Cancelar"></input>
+
+        <script type="text/javascript">
+        (function($) {
+          $(document).ready(function() {
+            $('form#add_person :input:visible:enabled:first').focus()
+          });
+        })(django.jQuery);
+        </script>
+
+        {# JavaScript for prepopulated fields #}
+        {% prepopulated_fields_js %}
+      </div>
+    </form>
+  </div>
+</div>
+<!-- END CREATE NEW BOX -->
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

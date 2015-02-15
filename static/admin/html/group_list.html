@@ -1,0 +1,36 @@
+<div class="row_item" ng-repeat="group in groups">
+  <!-- SELECT BOX -->
+  <div class="row_select">
+    <input id="id_choose" type="checkbox" value="{$ group.id $}"></input>
+  </div>
+
+  <!-- GROUP ID -->
+  <div class="row_text id">
+    {$ group.id $}
+  </div>
+
+  <!-- GROUP TITLE -->
+  <div class="row_text">
+    {$ group.title $}
+  </div>
+
+  <!-- GROUP MEMBER COUNT -->
+  <div class="row_text">
+    {$ group.person_set.all.count $}
+  </div>
+
+  <!-- GROUP LAST SCHEDULE -->
+  <div class="row_text">
+    Enero
+  </div>
+
+  <!-- PERSON MORE INFORMATION -->
+  <div class="row_action">
+    <a id="id_create" href="/ccm/department/{$ group.id $}">
+      <div class="action_button">
+          <img class="action_image" width="24" height="24" src="/static/admin/img/ic_info_outline_white_18dp.png"></img>
+          <div class="action_text">Ver ficha</div>
+      </div>
+    </a>
+  </div>
+</div>

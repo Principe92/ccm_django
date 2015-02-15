@@ -1,0 +1,156 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/person_detail.css" %}" />{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} panel{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+  <div class="inner_box">
+    <div class="details_box">
+      <!-- PERSON IMAGE -->
+      <div class="person_image">
+
+      </div>
+
+      <!-- NAME -->
+      <h1 class="person_name">
+        {{ person.name }}
+        {{ person.first_surname }}
+        {% if person.second_surname %}
+        {{ person.second_surname }}
+        {% endif %}
+      </h1>
+
+      <!-- DEPARTMENT -->
+      <div class="row">
+        <p>
+          <img class="actionbar_icon" src="/static/admin/img/ic_group_work_grey600_18dp.png"></img>
+          <span class="row_title"> Departamento: </span>
+          <span class="row_content">
+            {% for department in person.department.all %}
+                <span style="text-transform: capitalize">
+                  {{department.title}}
+                </span>
+              {% empty %}
+                sin definir
+            {% endfor %}
+          </span>
+        </p>
+      </div>
+
+      <!-- EMAIL -->
+      <div class="row">
+        <p>
+          <img class="menu_icon actionbar_icon" src="/static/admin/img/ic_email_grey600_18dp.png"></img>
+          <span class="row_title"> Email: </span>
+          <span class="row_content">
+            {% if person.email %}
+            {{ person.email }}
+            {% else %}
+            sin definir
+            {% endif %}
+          </span>
+        </p>
+      </div>
+
+      <!-- PHONE -->
+      <div class="row">
+        <p>
+          <img class="menu_icon actionbar_icon" src="/static/admin/img/ic_call_grey600_18dp.png"></img>
+          <span class="row_title"> Telefono: </span>
+          <span class="row_content">
+            {% if person.number %}
+            {{ person.number }}
+            {% else %}
+            sin definir
+            {% endif %}
+          </span>
+        </p>
+      </div>
+
+      <!-- ADDRESS -->
+      <div class="row">
+        <p>
+          <img class="menu_icon actionbar_icon" src="/static/admin/img/ic_location_on_grey600_18dp.png"></img>
+          <span class="row_title"> Dirección: </span>
+          <span class="row_content">
+            {% if person.address %}
+              {{ person.address }},
+
+              {% if person.pbox %}
+              {{ person.pbox}}
+              {% endif %}
+
+              {% if person.city or person.provinve or person.country %}
+              {{ person.city}}, {{ person.province }}, {{ person.country }}.
+              {% endif %}
+
+          {% else %}
+          sin definir
+          {% endif %}
+        </span>
+        </p>
+      </div>
+
+      <!-- NATIONALITY -->
+      <div class="row">
+        <p>
+          <img class="menu_icon actionbar_icon" src="/static/admin/img/ic_language_grey600_18dp.png"></img>
+          <span class="row_title"> Nacionalidad: </span>
+          <span class="row_content">
+            {% if person.nationality %}
+            {{ person.nationality }}
+            {% else %}
+            sin definir
+            {% endif %}
+          </span>
+        </p>
+      </div>
+
+      <!-- FIRST CREATED -->
+      <div class="row">
+        <p>
+          <img class="menu_icon actionbar_icon" src="/static/admin/img/ic_schedule_grey600_18dp.png"></img>
+          <span class="row_title"> Creado: </span>
+          <span class="row_content"> {{ person.created }}</span>
+        </p>
+      </div>
+
+      <!-- LAST UPDATED -->
+      <div class="row">
+        <p>
+          <img class="menu_icon actionbar_icon" src="/static/admin/img/ic_schedule_grey600_18dp.png"></img>
+          <span class="row_title"> Actualizado: </span>
+          <span class="row_content"> {{ person.updated }}</span>
+        </p>
+      </div>
+
+      <div class="row_action">
+        <!-- EDIT PERSON -->
+        <a id="id_edit" href="{% url 'person_edit' person.id %}">
+          <div class="action_button">
+            <img class="action_image" width="24" height="24" src="/static/admin/img/ic_create_white_18dp.png"></img>
+            <div class="action_text">Editar</div>
+          </div>
+        </a>
+
+        <!-- EDIT PERSON -->
+        <a id="id_edit" href="{% url 'person_clear' person.id %}">
+          <div class="action_button">
+            <img class="action_image" width="24" height="24" src="/static/admin/img/ic_delete_white_18dp.png"></img>
+            <div class="action_text">Eliminar</div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

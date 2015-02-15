@@ -1,0 +1,190 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+      <ul class="nav navbar-nav navbar-right">
+        <!-- Turnos -->
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Turnos <span class="caret"></span></a>
+          <ul class="dropdown-menu list-group" role="menu">
+            <li class="list-group-item" ng-repeat="turn in scheduleList">
+              <a href="/ccm/department/{$ turn.department $}/turns/{$ turn.id $}">Action</a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Miembros -->
+        <li><a href="/ccm/department/{$ group_id $}/members">Miembros</a></li>
+
+        <!-- Roles -->
+        <li><a href="/ccm/department/{$ group_id $}/roles">Roles</a></li>
+
+        <!-- Turnos -->
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a ng-click="show_monthForm = !show_monthForm" href="#">Nuevo mes</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Nuevo rol</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Añadir miembro</a></li>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+
+    </div>
+  </div>
+</nav>
+
+
+<div id="content">
+
+  <!-- BEGIN DEPARTMENT LIST -->
+  <div class="panel panel-default">
+    <nav class="navbar navbar-default ">
+      <div class="container-fluid">
+
+        <!-- BEGIN CONTENT HEADER -->
+        <h1 class="navbar-text navbar-left create_title">
+          TURNOS
+        </h2>
+        <!-- END CONTENT HEADER -->
+
+        <ul class="nav navbar-nav navbar-right">
+
+          <!-- Nuevo event -->
+          <li><a ng-click="show_eventForm = !show_eventForm" href="#"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Nuevo evento</a></li>
+        </ul>
+      </div>
+    </nav>
+
+      <div class="row_item teal_300">
+        <p class="person"> OBRERO </p>
+      </div>
+
+
+    </div>
+  <!-- Form to create new month -->
+  <div class="panel panel-primary" collapse="show_monthForm">
+    <!-- BEGIN CREATE NEW CONTENT -->
+    <div class="panel-heading">
+      <!-- BEGIN CONTENT HEADER -->
+      <h3 class="panel-title">
+        NUEVO MES
+      </h3>
+    </div>
+
+      <!-- END CONTENT HEADER -->
+      <!-- BEGIN CONTENT DETAILS -->
+      <div id="create_body">
+        <!-- BEGIN FORM -->
+        <form class="form-horizontal" name="newMonthForm" accept-charset="UTF-8" autocomplete="off" novalidate>
+
+          <div class = "form-group form-group-sm">
+            <label class="col-sm-1 control-label" for="set_month">Mes</label>
+              <div class = "col-xs-3">
+                <select id= "set_month" class="form-control" ng-model="new_month">
+                  <option ng-repeat="months in month_list" ng-value="{$ $index + 1 $}" required> {$ months $} </option>
+                </select>
+              </div>
+              <p class="form-control-static">{$ year $}</p>
+            </div>
+
+          <div class="form-group center-block">
+            <label class="col-sm-1 control-label" for="set_observation">Notas</label>
+            <div class="col-xs-4">
+              <textarea id="set_observation" name="observation" class="form-control" rows="3" ng-model="observation"></textarea>
+            </div>
+          </div>
+
+          <!-- BUTTON BOX -->
+          <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-10">
+              <button type="submit" class="btn btn-primary btn-sm" ng-click="submitMonthForm()">Crear</button>
+              <button type="button" class="btn btn-sm btn-danger" ng-click="clearMonthForm()">Cancelar</button>
+            </div>
+          </div>
+        </form>
+        <!-- END FORM -->
+      </div>
+      <!-- END CONTENT DETAILS -->
+    </div>
+    <!-- END CREATE NEW CONTENT -->
+  <!-- END CREATE NEW BOX -->
+
+  <!-- NEW Event Form -->
+  <div class="panel panel-default" collapse="show_eventForm">
+    <!-- BEGIN CREATE NEW CONTENT -->
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        NUEVO EVENTO
+      </h3>
+    </div>
+
+      <!-- END CONTENT HEADER -->
+      <!-- BEGIN CONTENT DETAILS -->
+      <div id="create_body">
+        <!-- BEGIN FORM -->
+        <form class="form-horizontal" name="newEventForm" accept-charset="UTF-8" autocomplete="off" novalidate>
+
+          <!-- ID -->
+          <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label" for="event_id"> Grabacion: </label>
+            <div class="col-xs-4 col-sm-2">
+              <input type="text" ng-model="event_id" id="event_id" class="form-control input-sm" aria-describedby="help" ng-required="true">
+              <span id="help" class="help-block input-sm">Ejemplo: 607</span>
+            </div>
+            <!-- Don't forget to add a dropdown to the right of the form field -->
+          </div>
+
+        <div class="form-group form-group-sm">
+          <label class="col-sm-2 control-label" for="event_title"> Titulo: </label>
+          <div class="col-xs-4">
+            <input type="text" ng-model="event_title" id="event_title" class="form-control input-sm" placeholder="Ponga el titulo del evento" aria-describedby="help" ng-required="true">
+            <span id="help" class="help-block input-sm">Ejemplo: Domingo 1&ordf; Reunion</span>
+          </div>
+          <!-- Don't forget to add a dropdown to the right of the form field -->
+        </div>
+
+        <div class="form-group form-group-sm">
+          <label class="col-sm-2 control-label" for="event_date">Fecha:</label>
+          <div class="col-xs-4">
+            <p class="input-group">
+              <input type="text" id="event_date" class="form-control input-sm" datepicker-popup="{$ format $}"
+              ng-model="dt" is-open="opened"
+              min-date="minDate" datepicker-options="dateOptions"
+               ng-required="true" close-text="Close" />
+
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+          <label class="col-sm-2 control-label" for="event_time">Tiempo:</label>
+          <div class="col-xs-2">
+             <timepicker ng-required="true" ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+          </div>
+        </div>
+
+        <!-- BUTTON BOX -->
+        <div class="row">
+          <div class="col-sm-offset-1 col-sm-10">
+            <button type="submit" class="btn btn-primary btn-sm" ng-click="submitEventForm()">Crear</button>
+            <button class="btn btn-info btn-sm" ng-click="toggleMode()">12H / 24H</button>
+            <button type="button" class="btn btn-sm btn-danger" ng-click="clearEventForm()">Cancelar</button>
+          </div>
+        </div>
+
+      </form>
+    <!-- END FORM -->
+  </div>
+  <!-- END CONTENT DETAILS -->
+  </div>
+  <!-- END CREATE NEW CONTENT -->
+  <!-- END CREATE NEW BOX -->
+</div>

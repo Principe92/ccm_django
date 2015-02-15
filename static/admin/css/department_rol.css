@@ -1,0 +1,165 @@
+.right_box{
+  float: right;
+  padding: 4px;
+  margin: 4px;
+  height: 100%;
+  min-width: 300px;
+  display: inline-block;
+}
+
+.left_box{
+  float: left;
+  padding: 4px;
+  margin: 8px;
+  min-width: 720px;
+  height: auto;
+  display: inline-block;
+}
+
+.create_box{
+  width: 100%;
+  min-height: 200px;
+}
+
+.create_title{
+  font-size: 14px;
+  font-style: normal;
+  color: black;
+  margin: 4px 0px;
+  font-weight: 50px;
+}
+
+#create_details{
+  padding: 8px 0px;
+  margin-left: 0px;
+  background-color: white;
+}
+
+.form_row{
+  display: block;
+  margin: 4px;
+  padding: 4px;
+}
+
+.form_label{
+  vertical-align: middle;
+  font-size: 12px;
+  font-style: normal;
+  width: 4em;
+  float: left;
+  text-align: left;
+  margin-left: 4px;
+}
+
+.table_head{
+  font-weight: bold;
+  font-size: 24px !important;
+  font-family: 'robotolight';
+  min-height: 30px !important;
+  background-color: #80cbc4 !important;
+}
+
+.row_item{
+  display: block;
+  margin: 8px;
+  padding: 4px;
+  min-height: 58px;
+  background-color: #b2dfdb;
+}
+
+.row_select{
+  display: inline-block;
+  margin: 8px;
+}
+
+.row_text{
+  display: inline-block;
+  margin: 8px;
+  padding: 2px;
+  font-size: 12px;
+  font-style: normal;
+  text-align: center;
+  width: 14em;
+  word-spacing: 8px;
+  vertical-align: middle;
+  text-transform: capitalize;
+}
+
+input[type=text]{
+  width: 20em;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 8px;
+}
+
+
+.error{
+  display: block;
+  margin-left: 4em;
+  margin-top: 4px;
+}
+
+.error_text{
+  display: block;
+  padding: 4px 0px;
+  color: red;
+  font-style: normal;
+  font-size: 12px;
+  font-weight: bold;;
+}
+
+.action_btn{
+  display: inline-block;
+  margin: 4px;
+  text-align: center;
+  vertical-align: middle;
+  text-shadow: none;
+  box-shadow: none;
+  border: medium none;
+}
+
+.header{
+  display: block;
+  font-size: 24px;
+  text-transform: capitalize;
+  text-align: center;
+  margin-top: 24px !important;
+}
+
+.left_box_content{
+  display: block;
+  margin-top: 2em;
+  background-color: white;
+  padding: 8px;
+}
+
+.tabs {
+  margin: 16px 12px !important;
+  height: 31px;
+  background-color: #004d40;
+}
+
+.tabs li {
+  float:  left;
+  margin: 0;
+  overflow: hidden;
+  background-color: #004d40;
+}
+.tabs li a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  font: bold 11px/11px 'robotoregular';
+  text-transform: uppercase;
+  padding: 10px 15px;
+  border-right: 1px solid #fff;
+}
+
+.tabs li a:hover {
+  background-color: #FF5722;
+}
+
+.tabs li.active a {
+  color:  white;
+  background-color: #4DB6AC;
+}

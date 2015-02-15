@@ -1,0 +1,45 @@
+/* LOGIN FORM */
+@import url("admin/css/main.css");
+
+
+body{
+    background-color: #424242 !important;
+}
+
+#login_container{
+  margin: 3em auto 0px auto;
+  width: 500px;
+  height: 100%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #FF5722;
+}
+
+#app_img{
+  display: block;
+  height: auto;
+  width: 200px;
+  margin: 8px auto;
+}
+
+#app_name{
+  font-family: 'robotolight';
+  font-style: normal;
+  font-weight: 300;
+  line-height: 16px;
+  color: white;
+  font-size: 2em;
+  text-align: center;
+}
+
+#content_main{
+  margin: 16px;
+  padding: 16px;
+  color: white;
+  text-align: center;
+  font-family: 'robotolight';
+}
+
+p{
+  margin: 16px;
+}

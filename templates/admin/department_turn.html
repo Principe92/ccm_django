@@ -1,0 +1,283 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+{% load djangular_tags %}
+{% load bootstrap_toolkit %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static "admin/css/turn.css" %}" />
+{% endblock %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+  <script>angular.module('ng.django.urls').constant('patterns', {% load_djng_urls %});</script>
+  <script type="text/javascript" src="{% static 'turnos/js/group.detail.module.js' %}"></script>
+  <script type="text/javascript" src="{% static 'turnos/js/group.detail.service.js' %}"></script>
+  <script type="text/javascript" src="{% static 'turnos/js/group.detail.controller.js' %}"></script>
+  <script type="text/javascript" src="{% static 'turnos/js/turnos.config.js' %}"></script>
+{% endblock extrahead %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} departamento{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+{% block url %}admin/department/{{ group.title }}/turnos{% endblock %}
+
+{% block controller %}GroupDetailController{% endblock%}
+{% block app %}turnos.group.detail{% endblock app%}
+
+<!-- Navigation Bar -->
+{% block nav-global %}
+<ul class="nav navbar-nav">
+  <!-- Turnos -->
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Turnos <span class="caret"></span></a>
+    <ul class="dropdown-menu" role="menu">
+      <li><a href="#">Action</a></li>
+      <li><a href="#">Another action</a></li>
+      <li><a href="#">Something else here</a></li>
+      <li class="divider"></li>
+      <li><a href="#">Separated link</a></li>
+      <li class="divider"></li>
+      <li><a href="#">One more separated link</a></li>
+    </ul>
+  </li>
+
+  <!-- Miembros -->
+  <li><a href="{% url 'ccm:group_memberView' group.id %}">Miembros</a></li>
+
+  <!-- Roles -->
+  <li><a href="{% url 'ccm:group_roleView' group.id %}">Roles</a></li>
+
+  <!-- Turnos -->
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span></a>
+    <ul class="dropdown-menu" role="menu">
+      <li><a ng-click="show_monthForm = !show_monthForm" href="#">Nuevo mes</a></li>
+      <li class="divider"></li>
+      <li><a href="#">Nuevo rol</a></li>
+      <li class="divider"></li>
+      <li><a href="#">Añadir miembro</a></li>
+    </ul>
+  </li>
+
+</ul>
+{% endblock %}
+
+{% block content %}
+
+{% if calendars %}
+<ul class="nav nav-pills">
+  {% for month in calendars %}
+  <li role="presentation"><a href="{% url 'department_turns' group.id month.id %}">{{month.month}}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<!--
+<button popover="Pincha para crear nuevo mes" popover-trigger="mouseenter" type="submit" class="btn btn-default" ng-click="show_form = !show_form">Nuevo mes</button>
+-->
+  <!-- BEGIN CREATE NEW BOX -->
+  <div class="create_box" collapse="show_monthForm">
+    <!-- BEGIN CREATE NEW CONTENT -->
+    <div class="create_content">
+      <!-- BEGIN CONTENT HEADER -->
+      <h1 class="create_title">
+        NUEVO MES
+      </h2>
+      <!-- END CONTENT HEADER -->
+      <!-- BEGIN CONTENT DETAILS -->
+      <div id="create_body">
+        <!-- BEGIN FORM -->
+        <form class="form-horizontal" name="newMonthForm" accept-charset="UTF-8" autocomplete="off" novalidate>
+
+          {% verbatim %}
+          <div class = "form-group form-group-sm">
+            <label class="col-sm-1 control-label" for="set_month">Mes</label>
+            <div class = "col-xs-3">
+              <select id= "set_month" class="form-control" ng-model="new_month">
+                <option ng-repeat="months in month_list" ng-value="{$ $index + 1 $}" > {$ months $} </option>
+              </select>
+            </div>
+            <p class="form-control-static">{$ year $}</p>
+          </div>
+          {% endverbatim %}
+
+          <div class="form-group center-block">
+            <label class="col-sm-1 control-label" for="set_observation">Notas</label>
+            <div class="col-xs-4">
+              <textarea id="set_observation" name="observation" class="form-control" rows="3" ng-model="observation"></textarea>
+            </div>
+          </div>
+
+          {% comment %}
+          {% for form_row in form %}
+          <div class="form_row">
+            {{ form_row.label_tag }}  {{ form_row }}
+          {%if form_row.errors %}
+            <div class="error">
+              {{ form_row.errors }}
+            </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% endcomment %}
+
+
+
+        <!-- BUTTON BOX -->
+        <div class="form-group">
+          <div class="col-sm-offset-1 col-sm-10">
+            <button type="submit" class="btn btn-primary btn-sm" ng-click="submitMonthForm( {{ group.id }} )">Crear</button>
+            <button type="button" class="btn btn-sm btn-danger" ng-click="clearMonthForm()">Cancelar</button>
+          </div>
+        </div>
+      </form>
+      <!-- END FORM -->
+    </div>
+    <!-- END CONTENT DETAILS -->
+  </div>
+<!-- END CREATE NEW CONTENT -->
+</div>
+<!-- END CREATE NEW BOX -->
+
+<!-- NEW Event Form -->
+<div class="create_box" collapse="show_eventForm">
+  <!-- BEGIN CREATE NEW CONTENT -->
+  <div class="create_content">
+    <!-- BEGIN CONTENT HEADER -->
+    <h1 class="create_title">
+      NUEVO EVENTO
+    </h2>
+    <!-- END CONTENT HEADER -->
+    <!-- BEGIN CONTENT DETAILS -->
+    <div id="create_body">
+      <!-- BEGIN FORM -->
+      <form class="form-horizontal" name="newEventForm" accept-charset="UTF-8" autocomplete="off" novalidate>
+
+        <div class="form-group">
+          <label class="col-sm-1 control-label" for="event_title"> Titulo: </label>
+          <div class="col-xs-4">
+            <input type="text" ng-model="event_title" id="event_title" class="form-control input-sm" placeholder="Ponga el titulo del evento" aria-describedby="help">
+            <span id="help" class="help-block">Ejemplo: Domingo 1&ordf; Reunion</span>
+          </div>
+          <!-- Don't forget to add a dropdown to the right of the form field -->
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-1 control-label" for="event_id"> Grabacion: </label>
+          <div class="col-xs-4">
+            <input type="text" ng-model="event_id" id="event_id" class="form-control input-sm" aria-describedby="help">
+            <span id="help" class="help-block">Ejemplo: 607</span>
+          </div>
+          <!-- Don't forget to add a dropdown to the right of the form field -->
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-1 control-label" for="event_date">Fecha:</label>
+          <div class="col-xs-4">
+            <p class="input-group">
+              <input type="text" id="event_date" class="form-control input-sm" datepicker-popup="{$ format $}"
+              ng-model="dt" is-open="opened"
+              min-date="minDate" datepicker-options="dateOptions"
+              date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-sm-1" for="event_date">Tiempo:</label>
+          <div class="col-xs-4">
+            <timepicker id="event_date" ng-model="mytime"></timepicker>
+          </div>
+        </div>
+
+      <!-- BUTTON BOX -->
+      <div class="row">
+        <div class="col-sm-offset-1 col-sm-10">
+          <button type="submit" class="btn btn-primary btn-sm" ng-click="submitEventForm( {{ group.id }}, {{ month }})">Crear</button>
+          <button type="button" class="btn btn-sm btn-danger" ng-click="clearEventForm()">Cancelar</button>
+        </div>
+      </div>
+
+    </form>
+    <!-- END FORM -->
+  </div>
+  <!-- END CONTENT DETAILS -->
+</div>
+<!-- END CREATE NEW CONTENT -->
+</div>
+<!-- END CREATE NEW BOX -->
+
+
+
+{% if calendars %}
+<ul class="tabs">
+  {% for month in calendars %}
+  <li><a href="{% url 'department_turns' group.id month.id %}">{{month.month}}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<!-- BEGIN DEPARTMENT LIST -->
+<div class="create_box dpt_list">
+  <div class="create_content">
+
+    <nav class="navbar navbar-default ">
+      <div class="container-fluid">
+
+        <!-- BEGIN CONTENT HEADER -->
+        <h1 class="navbar-text navbar-left create_title">
+          TURNOS
+        </h2>
+        <!-- END CONTENT HEADER -->
+
+        <ul class="nav navbar-nav navbar-right">
+
+          <!-- Nuevo event -->
+          <li><a ng-click="show_eventForm = !show_eventForm" href="#"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Nuevo evento</a></li>
+
+        </ul>
+      </div>
+    </nav>
+
+    <div class="row_item teal_300">
+      <p class="person"> OBRERO </p>
+    </div>
+
+    <!-- BEGIN OF LIST -->
+    {% if person_list %}
+    <div class="person_list">
+      {% for person in person_list %}
+      <div class="row_item">
+        <p class="person">{{ person.name }} {{ person.first_surname }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <a id="id_create_event" href="">
+      <div class="action_button button_fixed">
+          <img class="action_image" width="24" height="24" src="/static/admin/img/ic_add_white_18dp.png"></img>
+          <div class="action_text">Evento</div>
+      </div>
+    </a>
+
+  </div>
+</div>
+<!-- END DEPARTMENT LIST -->
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+
+<script type="text/javascript">
+  $(function(){
+    $("#id_month").datepicker();
+  });
+</script>

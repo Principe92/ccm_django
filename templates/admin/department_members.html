@@ -1,0 +1,118 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/personas.css" %}" />{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} departamento{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<!-- BEGIN PERSON LIST -->
+<div id="persons_list">
+  <div id="list">
+      <a id="id_create" href="{% url 'person_new' %}">
+        <div class="action_button button_fixed">
+            <img class="action_image" width="24" height="24" src="/static/admin/img/ic_add_box_white_18dp.png"></img>
+            <div class="action_text">Crear</div>
+        </div>
+      </a>
+
+    <!-- BEGIN LIST HEADER -->
+    <div class="row_item table_head">
+      <!-- SELECT BOX -->
+      <div class="row_select">
+        <input id="role" type="checkbox" value="all_roles"></input>
+      </div>
+
+      <!-- ROL ID -->
+      <h1 class="row_text id shift"> ID </h1>
+
+      <!-- ROL NAME -->
+      <h1 class="row_text name"> NOMBRE </h1>
+
+      <!-- ROL NAME -->
+      <h1 class="row_text "> APPELLIDOS </h1>
+
+      <!-- ROL NAME -->
+      <h1 class="row_text"> DEPARTAMENTO </h1>
+    </div>
+    <!-- END LIST HEADER -->
+
+    <!-- BEGIN OF LIST -->
+    {% if person_list %}
+    {% for person in person_list %}
+    <div class="row_item">
+      <!-- SELECT BOX -->
+      <div class="row_select">
+        <input id="id_choose" type="checkbox" value="{{person.id}}"></input>
+      </div>
+
+      <!-- PERSON ID -->
+      <div class="row_text id">
+        {{person.id}}
+      </div>
+
+      <!-- PERSON IMAGE -->
+      <img class="row_img" width="50" height="50" src="/static/admin/img/ic_account_circle_black_48dp.png"></img>
+
+      <!-- PERSON NAME -->
+      <div class="row_text name">
+        {{person.name}}
+      </div>
+
+      <!-- PERSON SURNAMES -->
+      <div class="row_text">
+        <span style="text-transform: capitalize">
+          {{person.first_surname}}</span>
+        <span style="text-transform: capitalize">
+          {{person.second_surname}} </span>
+      </div>
+
+      <!-- PERSON DEPARTMENT -->
+      <div class="row_text">
+        {% for department in person.department.all %}
+          {{department.title}}
+          {% empty %}
+          sin definir
+        {% endfor %}
+      </div>
+
+      <!-- PERSON MORE INFORMATION -->
+      <div class="row_action">
+        <a id="id_create" href="{% url 'person_detail' person.id %}">
+          <div class="action_button">
+              <img class="action_image" width="24" height="24" src="/static/admin/img/ic_info_outline_white_18dp.png"></img>
+              <div class="action_text">Ver ficha</div>
+          </div>
+        </a>
+
+        <!-- PERSON MORE INFORMATION -->
+        <a id="id_create" href="{% url 'details' %}">
+          <div class="action_button">
+              <img class="action_image" width="24" height="24" src="/static/admin/img/ic_assignment_white_18dp.png"></img>
+              <div class="action_text">Ver turno</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+  </div>
+</div>
+<!-- END PERSON LIST -->
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+
+{% block nav-global %}
+<div class="nav_menu">
+  <ul class="tabs">
+    <li><a href="{% url 'ccm:group_turnView' department.id %}">TURNOS</a></li>
+    <li><a href="{% url 'ccm:group_memberView' department.id %}">MIEMBROS</a></li>
+    <li><a href="{% url 'ccm:group_roleView' department.id %}">ROLES</a></li>
+  </ul>
+</div>
+{% endblock nav-global %}

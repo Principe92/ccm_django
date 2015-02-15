@@ -1,0 +1,66 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/panel.css" %}" />{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} panel{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<!-- BEGIN NOTIFICATION AREA -->
+<div class="box notification">
+
+  <!-- BEGIN BOX HEADER -->
+  <div class="box_header">
+      <h1> NOTIFICACIONES </h>
+  </div>
+  <!-- END BOX HEADER -->
+
+  <!-- BEGIN CONTENT DETAILS -->
+  <div id="box_body">
+
+  </div>
+
+  <!-- BEGIN BOX FOOTER -->
+  <div class="box_footer">
+
+  </div>
+  <!-- END BOX FOOTER -->
+</div>
+<!-- END NOTIFICATION AREA -->
+
+<!-- USER AREA -->
+<div class="box users">
+
+  <!-- BEGIN BOX HEADER -->
+  <div class="box_header">
+      <h1> USUARIOS </h1>
+      <!-- BEGIN LIST HEADER -->
+      <a id="id_create" href="{% url 'admin:auth_user_add' %}">
+        <div class="action_button button_fixed">
+            <img class="action_image" width="24" height="24" src="/static/admin/img/ic_add_box_white_18dp.png"></img>
+            <div class="action_text">Crear</div>
+        </div>
+      </a>
+      <!-- END LIST HEADER -->
+  </div>
+  <!-- END BOX HEADER -->
+
+  <!-- BEGIN CONTENT DETAILS -->
+  <div id="box_body">
+
+  </div>
+
+  <!-- BEGIN BOX FOOTER -->
+  <div class="box_footer">
+
+  </div>
+  <!-- END BOX FOOTER -->
+</div>
+<!-- END NOTIFICATION AREA -->
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

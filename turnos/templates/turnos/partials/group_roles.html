@@ -1,0 +1,123 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+      <ul class="nav navbar-nav navbar-right">
+        <!-- Turnos -->
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Turnos <span class="caret"></span></a>
+          <ul class="dropdown-menu list-group" role="menu">
+            <li class="list-group-item" ng-repeat="turn in scheduleList">
+              <a href="/ccm/department/{$ turn.department $}/turns/{$ turn.id $}">Action</a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Miembros -->
+        <li><a href="/ccm/department/{$ group_id $}/members">Miembros</a></li>
+
+        <!-- Roles -->
+        <li><a href="/ccm/department/{$ group_id $}/roles">Roles</a></li>
+
+        <!-- Turnos -->
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a ng-click="show_monthForm = !show_monthForm" href="#">Nuevo mes</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Nuevo rol</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Añadir miembro</a></li>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+
+    </div>
+  </div>
+</nav>
+
+<div id="content">
+  <!-- FORM -->
+  <div class="panel panel-primary" collapse="show_roleForm">
+    <!-- Heading -->
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        NUEVO ROL
+      </h3>
+    </div>
+
+    <!-- Body -->
+    <div id="create_body">
+      <form class="form-horizontal" name="newRoleForm" accept-charset="UTF-8" autocomplete="off" novalidate>
+
+        <div class="form-group">
+          <label class="col-sm-1 control-label" for="role_title"> Titulo: </label>
+          <div class="col-xs-4">
+            <input type="text" ng-model="role_title" id="role_title" class="form-control input-sm" aria-describedby="help">
+            <span id="help" class="help-block">Ejemplo: Domingo 1&ordf; Reunion</span>
+          </div>
+        </div>
+
+        <!-- BUTTON BOX -->
+        <div class="form-group">
+          <div class="col-sm-offset-1 col-sm-10">
+            <button type="submit" class="btn btn-primary btn-sm" ng-click="submit()">Crear</button>
+            <button type="button" class="btn btn-sm btn-danger" ng-click="clear()">Cancelar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- END Body -->
+  </div>
+  <!-- END Form -->
+
+  <!-- BEGIN LEFT BOX -->
+  <div class="left_box">
+    <h1 class="create_title header"> {{ department.title }} </h1>
+
+    <div class="left_box_content">
+      <div class="row_item table_head">
+        <!-- SELECT BOX -->
+        <div class="row_select">
+          <input id="role" type="checkbox" value="all_roles"></input>
+        </div>
+
+        <!-- ROL ID -->
+        <h1 class="row_text">
+          ID
+        </h1>
+
+        <!-- ROL NAME -->
+        <h1 class="row_text">
+          rol
+        </h1>
+      </div>
+
+    {% if role_list %}
+    {% for role in role_list %}
+    <div class="row_item">
+      <!-- SELECT BOX -->
+      <div class="row_select">
+        <input id="id_{{ role.id }}" type="checkbox" value="rol_{{ role.id }}"></input>
+      </div>
+
+      <!-- ROL ID -->
+      <div class="row_text">
+        {{ role.id }}
+      </div>
+
+      <!-- ROL NAME -->
+      <div class="row_text">
+          {{ role.title }}
+      </div>
+    </div>
+      {% endfor %}
+    {% endif %}
+    </div>
+  </div>
+  <!-- END OF LEFT BOX -->
+
+</div>
+<!-- END RIGHT BOX -->

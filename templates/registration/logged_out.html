@@ -1,0 +1,35 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/log_out.css" %}" />{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div id="login_container">
+  <!-- BRAND -->
+  <div id="brand" style="display:block;">
+    <img id="app_img" src="/static/admin/img/logo.png"></img>
+    <h1 id="app_name">AUDIOVISUAL</h1>
+  </div>
+
+<div id="content_main">
+  <p>{% trans "Your session has ended." %}</p>
+
+  <p>
+    <a id="id_create" href="{% url 'admin:index' %}">
+      <div class="action_button">
+        <img class="action_image" width="24" height="24" src="/static/admin/img/ic_lock_white_18dp.png"></img>
+        <span class="action_text">{% trans 'Log in again' %}</span>
+      </div>
+    </a>
+  </p>
+
+</div>
+{% endblock %}

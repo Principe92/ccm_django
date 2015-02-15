@@ -1,0 +1,117 @@
+#page-container {
+  border: 0px;
+  min-width: 1065px;
+}
+
+#content{
+  overflow: auto;
+}
+
+
+.row_item{
+  display: block;
+  margin: 8px;
+  padding: 4px;
+  min-height: 58px;
+  background-color: #b2dfdb;
+}
+
+.table_head{
+  font-weight: bold;
+  font-size: 24px !important;
+  font-family: 'robotolight';
+  min-height: 30px !important;
+  background-color: #80cbc4 !important;
+}
+
+.shift{
+  margin-right: 66px !important;
+}
+
+.row_text{
+  display: inline-block;
+  margin: 8px;
+  padding: 2px;
+  font-size: 12px;
+  font-style: normal;
+  text-align: center;
+  width: 14em;
+  word-spacing: 8px;
+  vertical-align: middle;
+}
+
+.id{
+  width: 2em !important;
+}
+
+.name{
+  width: 8em;
+}
+
+.row_select{
+  display: inline-block;
+  margin: 8px;
+}
+
+.row_img{
+  box-sizing: border-box;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  margin: 8px;
+}
+
+.row_action{
+  display: inline-block;
+  margin: 4px;
+  float: right;
+  vertical-align: middle;
+}
+
+#persons_list{
+  width: auto;
+  margin: 8px;
+  min-height: 400px;
+  margin: 8px 12px 8px 12px;
+  background-color: white;
+}
+
+#list{
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+}
+
+.tabs {
+  margin: 16px 12px !important;
+  height: 31px;
+  background-color: #004d40;
+}
+
+.tabs li {
+  float:  left;
+  margin: 0;
+  overflow: hidden;
+  background-color: #004d40;
+}
+.tabs li a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  font: bold 11px/11px 'robotoregular';
+  text-transform: uppercase;
+  padding: 10px 15px;
+  border-right: 1px solid #fff;
+}
+
+.tabs li a:hover {
+  background-color: #FF5722;
+}
+
+.tabs li.active a {
+  color:  white;
+  background-color: #4DB6AC;
+}

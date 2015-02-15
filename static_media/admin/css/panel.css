@@ -1,0 +1,58 @@
+.action_button{
+  float: right;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  margin: 0 2px 0 0;
+}
+
+.box{
+  display: inline-block;
+  overflow: auto;
+  margin: 16px;
+  margin-left: 8px;
+  width: 515px;
+  min-height: 200px;
+  position: relative;
+  background-color: white;
+}
+
+.notification{
+  min-height: 300px;
+  float: left;
+}
+
+.users{
+  float: right;
+}
+
+.box_header{
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+.box_body{
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+.box_footer{
+  display: block;
+  position: absolute;
+  bottom: 0px;
+}
+
+
+h1{
+  font-weight: normal;
+  font-size: 12px;
+  font-style: normal;
+  font-family: 'robotolight';
+  color: white;
+  padding-left: 8px;
+  width: 100px;
+  display: inline-block;
+  color: #FF5722;
+}
