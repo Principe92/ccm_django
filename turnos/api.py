@@ -24,6 +24,10 @@ class GroupDetailAPI(generics.RetrieveUpdateDestroyAPIView):
   serializer_class = DepartmentS
   queryset = Department.objects.all()
 
+class PersonListAPI(generics.ListAPIView):
+  serializer_class = PersonS
+  queryset = Person.objects.all()
+
 class GroupScheduleAPI(APIView):
 
   def get(self, request, group_pk, format=None):

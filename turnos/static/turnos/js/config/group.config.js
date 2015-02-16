@@ -16,7 +16,7 @@ angular
 
     // Department List
     $routeProvider
-        .when("/ccm/department/", {
+        .when("/ccm/department", {
           templateUrl: '/ccm/partial/view/group_main.html',
           controller: 'GroupJSControl',
           resolve: {
@@ -54,6 +54,22 @@ angular
           }
         })
 
+        .when("/ccm/person", {
+          templateUrl: '/ccm/partial/view/person_main.html',
+          controller: 'PersonController',
+          resolve: {
+            persons : getPersons
+          }
+        })
+
+        .when("/ccm/person/new", {
+          templateUrl: '/ccm/partial/view/person_create.html',
+        })
+
+        .when("/ccm/person/:id/details", {
+          templateUrl: '/ccm/partial/view/person_details.html',
+        })
+
         .otherwise({
           redirectTo: '/ccm/department/'
         })
@@ -89,6 +105,12 @@ angular
       var groupID = $route.current.params.id
       var data = Groups.get(groupID);
       console.log('group', data);
+      return data;
+    }
+
+    function getPersons(Persons){
+      var data = Persons.list();
+      console.log('persons', data)
       return data;
     }
   }

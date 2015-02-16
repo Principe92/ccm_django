@@ -4,11 +4,11 @@
 
       <ul class="nav navbar-nav navbar-right">
         <!-- Turnos -->
-        <li class="dropdown">
+        <li class="dropdown" id="turns_menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Turnos <span class="caret"></span></a>
           <ul class="dropdown-menu list-group" role="menu">
             <li class="list-group-item" ng-repeat="turn in scheduleList">
-              <a href="/ccm/department/{$ turn.department $}/turns/{$ turn.id $}">Action</a>
+              <a href="/ccm/department/{$ turn.department $}/turns/{$ turn.id $}">{$ monthNames[$index] $}</a>
             </li>
           </ul>
         </li>
@@ -17,7 +17,7 @@
         <li><a href="/ccm/department/{$ group_id $}/members">Miembros</a></li>
 
         <!-- Roles -->
-        <li><a href="/ccm/department/{$ group_id $}/roles">Roles</a></li>
+        <li class="active"><a href="/ccm/department/{$ group_id $}/roles">Roles</a></li>
 
         <!-- Turnos -->
         <li class="dropdown">

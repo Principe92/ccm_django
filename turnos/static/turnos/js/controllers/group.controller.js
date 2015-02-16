@@ -11,12 +11,27 @@ myGroupJSControl.$inject = ['$rootScope','$scope', '$http', 'Groups', '$log',
 function myGroupJSControl($rootScope, $scope, $http, Groups, $log, $route, group, turns, members, $filter) {
   var vm = this;
 
+  // List of months
+  $scope.month_list = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'July',
+                      'Agosto', 'Septiembre', 'Octobre', 'Noviembre', 'Diciembre'];
+
   $scope.scheduleList = turns;
+  $scope.monthNames = [];
   $scope.group_id = group.data.id;
   $scope.group_name = group.data.title;
   $scope.memberList = members;
 
   var calendar_id = $route.current.params.month
+
+  for (i = 0; i<turns.length; i++){
+    var date = new Date(turns[i].month)
+    $scope.monthNames[i] = $scope.month_list[date.getMonth()];
+  }
+
+  if ($scope.scheduleList.length == 0){
+    // Disable the turns menu dropdown by adding the class, disable
+    $("#turns_menu").addClass("disable")
+  }
 
   //var csrftoken = $.cookie('csrftoken');
 
@@ -26,8 +41,8 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log, $route, group
     observation : ""
   };
 
-  $scope.show_monthForm = false;
-  $scope.show_eventForm = false;
+  $scope.show_monthForm = true;
+  $scope.show_eventForm = true;
   $scope.year = new Date().getFullYear();
 
   $scope.next_month = get_month;
@@ -37,10 +52,6 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log, $route, group
     if (m > 12) m = 1;
     return m;
   }
-
-  // List of months
-  $scope.month_list = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'July',
-                      'Agosto', 'Septiembre', 'Octobre', 'Noviembre', 'Diciembre'];
 
 
   $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];

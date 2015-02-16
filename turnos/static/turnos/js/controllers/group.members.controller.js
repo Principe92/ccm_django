@@ -6,12 +6,27 @@ angular
 GroupMemberController.$inject = ['$rootScope','$scope', '$log', 'group', 'turns'];
 GroupRoleController.$inject = ['$rootScope','$scope', '$log', 'group', 'turns'];
 
+// List of months
+var month_list = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'July',
+                    'Agosto', 'Septiembre', 'Octobre', 'Noviembre', 'Diciembre'];
+
+
 function GroupMemberController($rootScope, $scope, $log, group, turns){
 
   $scope.scheduleList = turns;
   $scope.group_id = group.data.id;
   $scope.group_name = group.data.title;
-  console.log('group', $scope.scheduleList);
+  $scope.monthNames = [];
+
+  if ($scope.scheduleList.length == 0){
+    // Disable the turns menu dropdown by adding the class, disable
+    $("#turns_menu").addClass("disabled")
+  }
+
+  for (i = 0; i<turns.length; i++){
+    var date = new Date(turns[i].month)
+    $scope.monthNames[i] = month_list[date.getMonth()];
+  }
 
 }
 
@@ -21,6 +36,16 @@ function GroupRoleController($rootScope, $scope, $log, group, turns){
   $scope.scheduleList = turns;
   $scope.group_id = group.data.id;
   $scope.group_name = group.data.title;
-  console.log('group', $scope.scheduleList);
+  $scope.monthNames = [];
+
+  if ($scope.scheduleList.length == 0){
+    // Disable the turns menu dropdown by adding the class, disable
+    $("#turns_menu").addClass("disabled")
+  }
+
+  for (i = 0; i<turns.length; i++){
+    var date = new Date(turns[i].month)
+    $scope.monthNames[i] = month_list[date.getMonth()];
+  }
 
 }
