@@ -39,95 +39,57 @@
 </nav>
 
 <!-- BEGIN PERSON LIST -->
-<div id="persons_list">
-  <div id="list">
-      <a id="id_create" href="{% url 'person_new' %}">
-        <div class="action_button button_fixed">
-            <img class="action_image" width="24" height="24" src="/static/admin/img/ic_add_box_white_18dp.png"></img>
-            <div class="action_text">Crear</div>
-        </div>
-      </a>
+<div class="content">
 
-    <!-- BEGIN LIST HEADER -->
-    <div class="row_item table_head">
-      <!-- SELECT BOX -->
-      <div class="row_select">
-        <input id="role" type="checkbox" value="all_roles"></input>
-      </div>
-
-      <!-- ROL ID -->
-      <h1 class="row_text id shift"> ID </h1>
-
-      <!-- ROL NAME -->
-      <h1 class="row_text name"> NOMBRE </h1>
-
-      <!-- ROL NAME -->
-      <h1 class="row_text "> APPELLIDOS </h1>
-
-      <!-- ROL NAME -->
-      <h1 class="row_text"> DEPARTAMENTO </h1>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1 class="panel-title">
+        MIEMBROS
+      </h2>
     </div>
-    <!-- END LIST HEADER -->
 
-    <!-- BEGIN OF LIST -->
-    {% if person_list %}
-    {% for person in person_list %}
-    <div class="row_item">
-      <!-- SELECT BOX -->
-      <div class="row_select">
-        <input id="id_choose" type="checkbox" value="{{person.id}}"></input>
-      </div>
+    <table class="table">
+      <tr>
+        <th>
+          <input id="id_choose" type="checkbox" value="all_rows"></input>
+        </th>
+        <th> ID </th>
+        <th> NOMBRE </th>
+        <th> APPELLIDOS </th>
+        <th> MENU </th>
+      </tr>
 
-      <!-- PERSON ID -->
-      <div class="row_text id">
-        {{person.id}}
-      </div>
+      <tr ng-repeat="person in memberList">
+        <td>
+          <input id="id_choose" type="checkbox" value="{$ person.id $}"></input>
+        </td>
 
-      <!-- PERSON IMAGE -->
-      <img class="row_img" width="50" height="50" src="/static/admin/img/ic_account_circle_black_48dp.png"></img>
+        <td>
+          {$ person.id $}
+        </td>
 
-      <!-- PERSON NAME -->
-      <div class="row_text name">
-        {{person.name}}
-      </div>
+        <td>
+          {$ person.name $}
+        </td>
 
-      <!-- PERSON SURNAMES -->
-      <div class="row_text">
-        <span style="text-transform: capitalize">
-          {{person.first_surname}}</span>
-        <span style="text-transform: capitalize">
-          {{person.second_surname}} </span>
-      </div>
+        <td>
+          <span style="text-transform: capitalize">{$ person.first_surname $}</span>
+          <span style="text-transform: capitalize">{$ person.second_surname $} </span>
+        </td>
 
-      <!-- PERSON DEPARTMENT -->
-      <div class="row_text">
-        {% for department in person.department.all %}
-          {{department.title}}
-          {% empty %}
-          sin definir
-        {% endfor %}
-      </div>
-
-      <!-- PERSON MORE INFORMATION -->
-      <div class="row_action">
-        <a id="id_create" href="{% url 'person_detail' person.id %}">
-          <div class="action_button">
-              <img class="action_image" width="24" height="24" src="/static/admin/img/ic_info_outline_white_18dp.png"></img>
-              <div class="action_text">Ver ficha</div>
+        <td>
+          <div class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+              <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Ver ficha</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Ver turno</a></li>
+              </ul>
           </div>
-        </a>
-
-        <!-- PERSON MORE INFORMATION -->
-        <a id="id_create" href="{% url 'details' %}">
-          <div class="action_button">
-              <img class="action_image" width="24" height="24" src="/static/admin/img/ic_assignment_white_18dp.png"></img>
-              <div class="action_text">Ver turno</div>
-          </div>
-        </a>
-      </div>
-    </div>
-    {% endfor %}
-    {% endif %}
+        </td>
+      </tr>
+    </table>
   </div>
 </div>
 <!-- END PERSON LIST -->

@@ -20,7 +20,7 @@ angular
           templateUrl: '/ccm/partial/view/group_main.html',
           controller: 'GroupJSControl',
           resolve: {
-            groupList : getGroups
+            groupList : getGroupList
           }
         })
 
@@ -31,7 +31,8 @@ angular
             turns : getSchedules,
             group : getGroup,
             members : getMember,
-            events : getEvents
+            events : getEvents,
+            roles : getRoles
           }
         })
 
@@ -40,7 +41,7 @@ angular
           controller: 'GroupMemberController',
           resolve: {
             turns : getSchedules,
-            group : getGroup,
+            groups : getGroup,
             members : getMember
           }
         })
@@ -50,7 +51,8 @@ angular
           controller: 'GroupRoleController',
           resolve: {
             turns : getSchedules,
-            group : getGroup
+            groups : getGroup,
+            roles : getRoles
           }
         })
 
@@ -64,6 +66,10 @@ angular
 
         .when("/ccm/person/new", {
           templateUrl: '/ccm/partial/view/person_create.html',
+          controller: 'PersonCreateController',
+          resolve: {
+            groups : getGroupList
+          }
         })
 
         .when("/ccm/person/:id/details", {
@@ -74,7 +80,7 @@ angular
           redirectTo: '/ccm/department/'
         })
 
-    function getGroups(Groups){
+    function getGroupList(Groups){
       var data = Groups.list();
       return data;
     }
@@ -83,6 +89,13 @@ angular
       var groupID = $route.current.params.id
       var data = Groups.scheduleList(groupID);
       console.log('schedule list', data);
+      return data;
+    }
+
+    function getRoles($route, Groups){
+      var groupID = $route.current.params.id
+      var data = Groups.roles(groupID);
+      console.log('role list', data);
       return data;
     }
 

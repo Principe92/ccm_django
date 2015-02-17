@@ -5,3 +5,112 @@
     </div>
   </div>
 </nav>
+
+<div class="content">
+  <form class="form-horizontal" name="newPersonForm" accept-charset="UTF-8" autocomplete="off">
+
+    <!-- UPLOAD PERSON IMAGE -->
+    <div class="form_image">
+
+    </div>
+
+    <!-- Name -->
+    <div class="form-group form-group-sm">
+      <label class="col-sm-2 control-label" for="name_id"> Nombre: </label>
+      <div class="col-xs-4 col-sm-2">
+        <input type="text" ng-model="name" id="name_id" class="form-control input-sm" ng-required="true">
+      </div>
+    </div>
+
+    <!-- First Surname -->
+    <div class="form-group form-group-sm">
+      <label class="col-sm-2 control-label" for="first_surname_id"> Primer appellido: </label>
+      <div class="col-xs-4 col-sm-2">
+        <input type="text" ng-model="first_surname" id="first_surname_id" class="form-control input-sm" ng-required="true">
+      </div>
+    </div>
+
+    <!-- Second Surname -->
+    <div class="form-group form-group-sm">
+      <label class="col-sm-2 control-label" for="second_surname_id"> Segundo appellido: </label>
+      <div class="col-xs-4 col-sm-2">
+        <input type="text" ng-model="second_surname" id="second_surname_id" class="form-control input-sm">
+      </div>
+    </div>
+
+    <!-- Phone number -->
+    <div class="form-group form-group-sm">
+      <label class="col-sm-2 control-label" for="phone_id"> Telefóno: </label>
+      <div class="col-xs-4 col-sm-2">
+        <input type="text" ng-model="phone" id="phone_id" class="form-control input-sm">
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="form-group form-group-sm">
+      <label class="col-sm-2 control-label" for="address_id"> Dirección: </label>
+      <div class="col-xs-4 col-sm-2">
+        <input type="text" ng-model="address" id="address_id" class="form-control input-sm">
+      </div>
+    </div>
+
+    <!-- Zip code -->
+    <div class="form-group form-group-sm">
+      <label class="col-sm-2 control-label" for="zip_id"> Codigo postal: </label>
+      <div class="col-xs-4 col-sm-2">
+        <input type="text" ng-model="zip" id="zip_id" class="form-control input-sm">
+      </div>
+    </div>
+
+    <!-- City -->
+    <div class="form-group form-group-sm">
+      <label class="col-sm-2 control-label" for="city_id"> Ciudad: </label>
+      <div class="col-xs-4 col-sm-2">
+        <input type="text" ng-model="city" id="city_id" class="form-control input-sm">
+      </div>
+    </div>
+
+    <!-- Province -->
+    <div class="form-group form-group-sm">
+      <label class="col-sm-2 control-label" for="province_id"> Provincia: </label>
+      <div class="col-xs-4 col-sm-2">
+        <input type="text" ng-model="province" id="province_id" class="form-control input-sm">
+      </div>
+    </div>
+
+    <!-- Country -->
+    <div class="form-group form-group-sm">
+      <label class="col-sm-2 control-label" for="country_id"> Pais: </label>
+      <div class="col-xs-4 col-sm-2">
+        <input type="text" ng-model="country" id="country_id" class="form-control input-sm">
+      </div>
+    </div>
+
+    <!-- Nationality -->
+    <div class="form-group form-group-sm">
+      <label class="col-sm-2 control-label" for="nationality_id"> Nacionalidad: </label>
+      <div class="col-xs-4 col-sm-2">
+        <input type="text" ng-model="nationality" id="nationality_id" class="form-control input-sm">
+      </div>
+    </div>
+
+      <div class="form-inline">
+        <legend class="col-sm-2 control-label"> Departamentos: </legend>
+          <div class="checkbox" ng-repeat="group in groupList">
+            <label class="checkbox-inline">
+              <input type="checkbox" id="{$ group.id $}" value="{$ group.id $}" class="form-control input-sm"> {$ group.title $}
+            </label>
+          </div>
+      </div>
+    </br>
+
+    <!-- BUTTON BOX -->
+    <div class="row">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary btn-sm" ng-click="">Guardar</button>
+        <button class="btn btn-info btn-sm" ng-click="">Guardar y crear otro</button>
+        <button type="button" class="btn btn-sm btn-danger" ng-click="">Cancelar</button>
+      </div>
+    </div>
+  </form>
+</div>

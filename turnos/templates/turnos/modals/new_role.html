@@ -1,0 +1,26 @@
+<div class="modal-content">
+
+  <div class="modal-header">
+    <h3 class="modal-title"> Nuevo rol </h3>
+  </div>
+
+  <div class="modal-body">
+    <form class="form-horizontal" name="newRoleForm" accept-charset="UTF-8" autocomplete="off" novalidate>
+
+      <div class="form-group">
+        <label class="col-sm-1 control-label" for="role_title"> Titulo: </label>
+        <div class="col-xs-6">
+          <input type="text" ng-model="role_title" id="role_title" class="form-control input-sm" aria-describedby="help">
+          <span id="help" class="help-block input-sm">Ejemplo: Domingo 1&ordf; Reunion</span>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" ng-click="submit()">Crear</button>
+    <button type="button" class="btn btn-warning" ng-click="clean()">Cancelar</button>
+  </div>
+
+</div>

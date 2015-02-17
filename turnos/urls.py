@@ -1,8 +1,9 @@
 from django.conf.urls import patterns, url, include
 
-from turnos.api import DepartmentList, DepartmentRoles, GroupMemberAPI
-from turnos.api import RoleList, GroupListAPI, GroupDetailAPI, GroupScheduleAPI, GroupEventAPI
+from turnos.api import DepartmentList, GroupMemberAPI
+from turnos.api import GroupListAPI, GroupDetailAPI, GroupScheduleAPI, GroupEventAPI, GroupRolesAPI
 from turnos.api import PersonListAPI
+from turnos.api import RoleListAPI
 from turnos.views import DepartmentViewSet, IndexView, EachDepartmentViewSet, GroupBaseView
 from turnos.views import PersonBaseView
 from rest_framework_nested import routers
@@ -40,18 +41,16 @@ partial_url = patterns('',
 
 api_url = patterns('',
   url(r'^department/(?P<pk>\d+)/member/$', GroupMemberAPI.as_view(), name='group_memberListAPI'),
-  url(r'^department/(?P<pk>\d+)/role/$', DepartmentRoles.as_view(), name='api_roles'),
+  url(r'^department/(?P<group_pk>\d+)/roles/$', GroupRolesAPI.as_view(), name='group_rolesAPI'),
   url(r'^department/(?P<group_pk>\d+)/schedule/$', GroupScheduleAPI.as_view(), name='group_scheduleAPI'),
-  url(r'^department/(?P<pk>\d+)/$', GroupDetailAPI.as_view(), name='group_detailAPI'),
+  url(r'^department/(?P<pk>\d+)/details$', GroupDetailAPI.as_view(), name='group_detailAPI'),
   url(r'^department/$', GroupListAPI.as_view(), name='group_listAPI'),
 
   url(r'^event/(?P<group_pk>\d+)/calendar/(?P<calendar_pk>\d+)/$', GroupEventAPI.as_view(), name='group_eventAPI'),
 
-  url(r'^person/$', PersonListAPI.as_view(), name='person_listAPI')
-)
+  url(r'^person/$', PersonListAPI.as_view(), name='person_listAPI'),
 
-role_url = patterns('',
-  url(r'^$', RoleList.as_view(), name='role_list')
+  url(r'^role/$', RoleListAPI.as_view(), name='role_listAPI')
 )
 
 test_url = patterns('',
@@ -59,12 +58,17 @@ test_url = patterns('',
   url(r'^/$', GroupBaseView.as_view(), name='group_list'),
 )
 
+modal_url = patterns('',
+  url(r'^view/new_month.html$', GroupPartialView.as_view(template_name = 'turnos/modals/new_month.html'), name='new_monthModal'),
+  url(r'^view/new_role.html$', GroupPartialView.as_view(template_name = 'turnos/modals/new_role.html'), name='new_roleModal')
+)
+
 
 urlpatterns = patterns('',
     url(r'^department', include(department_url)),
     url(r'^person/', include(person_url)),
     url(r'^partial/', include(partial_url)),
+    url(r'^modal/', include(modal_url)),
     url(r'^api/', include(api_url)),
-    url(r'^role', include(role_url)),
     url(r'^test', include(test_url)),
 )

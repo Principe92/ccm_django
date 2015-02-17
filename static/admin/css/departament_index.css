@@ -68,7 +68,7 @@
 
 label, legend{
   vertical-align: middle;
-  font-size: 12px;
+  font-size: 12px !important;
   font-style: normal;
   width: 4em;
   float: left;

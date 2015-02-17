@@ -64,7 +64,7 @@
         <div class="form-group">
           <div class="col-sm-offset-1 col-sm-10">
             <button type="submit" class="btn btn-primary btn-sm" ng-click="submit()">Crear</button>
-            <button type="button" class="btn btn-sm btn-danger" ng-click="clear()">Cancelar</button>
+            <button type="button" class="btn btn-sm btn-danger" ng-click="clean()">Cancelar</button>
           </div>
         </div>
       </form>
@@ -73,51 +73,39 @@
   </div>
   <!-- END Form -->
 
-  <!-- BEGIN LEFT BOX -->
-  <div class="left_box">
-    <h1 class="create_title header"> {{ department.title }} </h1>
+  <div class="panel panel-default">
 
-    <div class="left_box_content">
-      <div class="row_item table_head">
-        <!-- SELECT BOX -->
-        <div class="row_select">
-          <input id="role" type="checkbox" value="all_roles"></input>
-        </div>
-
-        <!-- ROL ID -->
-        <h1 class="row_text">
-          ID
-        </h1>
-
-        <!-- ROL NAME -->
-        <h1 class="row_text">
-          rol
-        </h1>
-      </div>
-
-    {% if role_list %}
-    {% for role in role_list %}
-    <div class="row_item">
-      <!-- SELECT BOX -->
-      <div class="row_select">
-        <input id="id_{{ role.id }}" type="checkbox" value="rol_{{ role.id }}"></input>
-      </div>
-
-      <!-- ROL ID -->
-      <div class="row_text">
-        {{ role.id }}
-      </div>
-
-      <!-- ROL NAME -->
-      <div class="row_text">
-          {{ role.title }}
-      </div>
+    <div class="panel-heading">
+      <h1 class="panel-title">
+        ROLES
+      </h2>
     </div>
-      {% endfor %}
-    {% endif %}
-    </div>
+
+    <table class="table">
+      <tr>
+        <th>
+          <input id="id_choose" type="checkbox" value="all_rows"></input>
+        </th>
+        <th> ID </th>
+        <th> TITULO </th>
+      </tr>
+
+      <tr ng-repeat="rol in roleList">
+        <td>
+          <input id="id_choose" type="checkbox" value="{$ rol.id $}"></input>
+        </td>
+
+        <td>
+          {$ rol.id $}
+        </td>
+
+        <td>
+          {$ rol.title $}
+        </td>
+
+      </tr>
+    </table>
   </div>
-  <!-- END OF LEFT BOX -->
 
 </div>
 <!-- END RIGHT BOX -->

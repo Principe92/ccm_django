@@ -5,10 +5,12 @@ angular
 
 GroupJSControl.$inject = ['$rootScope','$scope', '$http', 'Groups', '$log', 'groupList'];
 myGroupJSControl.$inject = ['$rootScope','$scope', '$http', 'Groups', '$log',
-  '$route', 'group', 'turns', 'members', '$filter'];
+  '$route', 'group', 'turns', 'members', '$filter', 'roles', '$modal'];
 
 
-function myGroupJSControl($rootScope, $scope, $http, Groups, $log, $route, group, turns, members, $filter) {
+function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
+  $route, group, turns, members, $filter, roles, $modal) {
+
   var vm = this;
 
   // List of months
@@ -20,6 +22,53 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log, $route, group
   $scope.group_id = group.data.id;
   $scope.group_name = group.data.title;
   $scope.memberList = members;
+  $scope.roleList = roles;
+
+  // Initialize the new month Modal
+  $scope.openNewMonth = function (size){
+
+    var instance = $modal.open({
+      templateUrl: '/ccm/modal/view/new_month.html',
+      controller: 'new_monthCtrl',
+      size : size,
+      resolve: {
+        group_id: function () {
+          return $scope.group_id;
+        }
+      }
+    });
+
+    instance.result.then(
+      function(data){
+      },
+
+      function (){
+         $log.info('Modal dismissed at: ' + new Date());
+      });
+    };
+
+    // Initialize the new role Modal
+    $scope.openNewRole = function (size){
+
+      var instance = $modal.open({
+        templateUrl: '/ccm/modal/view/new_role.html',
+        controller: 'new_roleCtrl',
+        size : size,
+        resolve: {
+          group_id: function () {
+            return $scope.group_id;
+          }
+        }
+      });
+
+      instance.result.then(
+        function(data){
+        },
+
+        function (){
+           $log.info('Modal dismissed at: ' + new Date());
+        });
+      };
 
   var calendar_id = $route.current.params.month
 
@@ -34,12 +83,6 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log, $route, group
   }
 
   //var csrftoken = $.cookie('csrftoken');
-
-  // Default Form value
-  var defaultForm = {
-    month : "",
-    observation : ""
-  };
 
   $scope.show_monthForm = true;
   $scope.show_eventForm = true;
@@ -108,22 +151,6 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log, $route, group
 
   activate();
 
-  // Submit new month form
-  $scope.submitMonthForm = function(){
-    var data = {month: parseInt($scope.new_month, 10), observation: $scope.observation};
-    console.log('Create new month: ', data);
-    Groups.newSchedule($scope.group_id, data).then(createSuccessFn, createErrorFn);
-  }
-
-  // Clear new month form
-  $scope.clearMonthForm = function(){
-    //make the record pristine
-    console.log('Clear new month form');
-    $scope.newMonthForm.$setPristine();
-    $scope.new_month = angular.copy(defaultForm);
-    $scope.show_monthForm = true;
-  }
-
   // Submit new event form
   $scope.submitEventForm = function(){
     var day = $scope.dt.getDate();
@@ -191,25 +218,6 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log, $route, group
   * @desc Show error loading groups
   */
   function groupsErrorFn(data, status, headers, config) {}
-
-  /**
-  * @name createSuccessFn
-  * @desc add newly created group to list
-  */
-  function createSuccessFn(data, status, headers, config) {
-    console.log(data);
-    nullEventForm();
-  //  $rootScope.$broadcast('group.created', data);
-  }
-
-  /**
-  * @name createErrorFn
-  * @desc Show error creating new group
-  */
-  function createErrorFn(data, status, headers, config) {
-  console.log("Status: " + status + ", Data: " + data);
-//  $scope.new_month.month.addClass('has-error')
-  }
 }
 
 

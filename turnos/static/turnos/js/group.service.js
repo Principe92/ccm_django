@@ -19,8 +19,10 @@ function Groups($http, djangoUrl, $q) {
     scheduleList : getScheduleList,
     eventList : getEventList,
     memberList : getMemberList,
+    roles : getRoles,
     newEvent : newEvent,
-    newSchedule : newSchedule
+    newSchedule : newSchedule,
+    newRole : newRole
   };
 
   return Groups;
@@ -33,6 +35,22 @@ function Groups($http, djangoUrl, $q) {
   * @returns {Promise}
   * @memberOf turnos.group.services.Groups
   */
+
+  function newRole(group_pk, data){
+    return $http.post(djangoUrl.reverse('ccm:group_rolesAPI', [group_pk]), data);
+  }
+
+  function getRoles(group_pk){
+    var defer = $q.defer()
+    $http.get(djangoUrl.reverse('ccm:group_rolesAPI', [group_pk]))
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      })
+      .error(function(data, status, headers, config){
+        defer.reject(status);
+      });
+    return defer.promise;
+  }
 
   function newEvent(group_pk, calendar_pk, data){
     console.log('group_pk: ' + group_pk);

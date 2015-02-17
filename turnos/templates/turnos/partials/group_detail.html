@@ -23,9 +23,9 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a ng-click="show_monthForm = !show_monthForm" href="#">Nuevo mes</a></li>
+            <li><a ng-click="openNewMonth()" href="#">Nuevo mes</a></li>
             <li class="divider"></li>
-            <li><a href="#">Nuevo rol</a></li>
+            <li><a ng-click="openNewRole()" href="#">Nuevo rol</a></li>
             <li class="divider"></li>
             <li><a href="#">Añadir miembro</a></li>
           </ul>
@@ -86,56 +86,7 @@
           </td>
         </tr>
       </table>
-
-
     </div>
-  <!-- Form to create new month -->
-  <div class="panel panel-primary" collapse="show_monthForm">
-    <!-- BEGIN CREATE NEW CONTENT -->
-    <div class="panel-heading">
-      <!-- BEGIN CONTENT HEADER -->
-      <h3 class="panel-title">
-        NUEVO MES
-      </h3>
-    </div>
-
-      <!-- END CONTENT HEADER -->
-      <!-- BEGIN CONTENT DETAILS -->
-      <div id="create_body">
-        <!-- BEGIN FORM -->
-        <form class="form-horizontal" name="newMonthForm" accept-charset="UTF-8" autocomplete="off">
-
-          <div class = "form-group form-group-sm">
-            <label class="col-sm-1 control-label" for="set_month">Mes</label>
-              <div class = "col-xs-3">
-                <select id= "set_month" class="form-control" ng-model="new_month">
-                  <option ng-repeat="months in month_list" ng-value="{$ $index + 1 $}" required> {$ months $} </option>
-                </select>
-              </div>
-              <p class="form-control-static">{$ year $}</p>
-            </div>
-
-          <div class="form-group center-block">
-            <label class="col-sm-1 control-label" for="set_observation">Notas</label>
-            <div class="col-xs-4">
-              <textarea id="set_observation" name="observation" class="form-control" rows="3" ng-model="observation"></textarea>
-            </div>
-          </div>
-
-          <!-- BUTTON BOX -->
-          <div class="form-group">
-            <div class="col-sm-offset-1 col-sm-10">
-              <button type="submit" class="btn btn-primary btn-sm" ng-click="submitMonthForm()">Crear</button>
-              <button type="button" class="btn btn-sm btn-danger" ng-click="clearMonthForm()">Cancelar</button>
-            </div>
-          </div>
-        </form>
-        <!-- END FORM -->
-      </div>
-      <!-- END CONTENT DETAILS -->
-    </div>
-    <!-- END CREATE NEW CONTENT -->
-  <!-- END CREATE NEW BOX -->
 
   <!-- NEW Event Form -->
   <div class="panel panel-default" collapse="show_eventForm">

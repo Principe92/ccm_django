@@ -28,6 +28,31 @@ class PersonListAPI(generics.ListAPIView):
   serializer_class = PersonS
   queryset = Person.objects.all()
 
+class RoleListAPI(generics.ListAPIView):
+  serializer_class = RoleS
+  queryset = Role.objects.all()
+
+class GroupRolesAPI(APIView):
+
+  def get(self, request, group_pk, format=None):
+    department = get_object_or_404(Department, pk=group_pk)
+    snippets = Role.objects.filter(department=department)
+    serializer = RoleS(snippets, many=True)
+    return Response(serializer.data)
+
+  def post(self, request, group_pk, format=None):
+    data = request.data
+
+    serializer = RoleS(data=data)
+
+    if serializer.is_valid():
+      serializer.save()
+
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    # Error occurred
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class GroupScheduleAPI(APIView):
 
   def get(self, request, group_pk, format=None):
@@ -137,6 +162,7 @@ class GroupListAPI(APIView):
     """
     def get(self, request, format=None):
         snippets = Department.objects.all()
+        print('Over Here')
         serializer = DepartmentS(snippets, many=True)
         return Response(serializer.data)
 
@@ -186,15 +212,6 @@ class GroupListAPI(APIView):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class DepartmentRoles(generics.ListCreateAPIView):
-  model = Role
-  serializer_class = RoleS
-
-  def get_queryset(self):
-    queryset = super(DepartmentRoles, self).get_queryset()
-    return queryset.filter(department__id=self.kwargs.get('pk'))
 
 
 class RoleList(generics.ListCreateAPIView):

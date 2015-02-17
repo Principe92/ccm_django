@@ -58,7 +58,8 @@ class Role(models.Model):
     title = models.CharField(max_length=20)
 
     class Meta:
-        db_table = "role"
+      db_table = "role"
+      unique_together = ("title", "department")
 
 # Calendar table - stores all the monthly calendars for each department
 class Calendar(models.Model):
