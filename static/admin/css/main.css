@@ -19,6 +19,33 @@ body{
     line-height: 1.5em;
 }
 
+.event_menu_icon{
+  float: right;
+  display: inline-block;
+}
+
+.event_title{
+  display: inline-block;
+}
+
+.event_head{
+  color: white !important;
+}
+
+ul{
+    /*margin: .2em 0 .8em 0; */
+    padding: 0px;
+    margin: 0px 0px 0px 16px;
+    box-sizing: border-box;
+    list-style: outside none none;
+}
+
+li{
+    font-size: 13px;
+    line-height: 1.5px;
+}
+
+
 /* style for the navigation bar */
 #page_head{
     height: 60px;
@@ -230,19 +257,6 @@ body{
   font-weight: normal;
 }
 
-ul{
-    /*margin: .2em 0 .8em 0; */
-    padding: 0px;
-    margin: 0px 0px 0px 16px;
-    box-sizing: border-box;
-    list-style: outside none none;
-}
-
-li{
-    font-size: 13px;
-    line-height: 1.5px;
-}
-
 /* END */
 
 /* ACTION BUTTONS */
@@ -285,9 +299,9 @@ li{
 }
 
 div{
-/*  border-width: 1px;
-  border-style: solid;
-  border-color: blue;  */
+  /* outline-width: 0.5px;
+  outline-style: solid;
+  outline-color: blue; */
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;

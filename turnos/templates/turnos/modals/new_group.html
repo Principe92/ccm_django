@@ -1,0 +1,41 @@
+<div class="modal-content">
+
+  <div class="modal-header">
+    <h3 class="modal-title"> Nuevo departamento </h3>
+  </div>
+
+  <div class="modal-body">
+    <form class="form-horizontal" name="groupForm"  accept-charset="UTF-8" autocomplete="off">
+      <div class="form-group form-group-sm">
+        <label class="col-sm-1 control-label" for="group_name"> Titulo:</label>
+        <div class="col-xs-4 col-sm-4">
+          <input type="text" ng-model="group_name" id="group_name" class="form-control input-sm" ng-required="true">
+        </div>
+      </div>
+
+      <div class="form-group form-group-sm">
+        <label class="col-sm-1 control-label"> Roles: </label>
+        <div class="form-inline">
+
+          <div class="col-xs-4 col-sm-3">
+            <input type="text" ng-model="group_rol_1" id="group_rol_1" class="form-control input-sm" placeholder="introduce un rol">
+          </div>
+
+          <div class="col-xs-4 col-sm-3">
+            <input type="text" ng-model="group_rol_2" id="group_rol_2" class="form-control input-sm" placeholder="introduce un rol">
+          </div>
+
+          <div class="col-xs-4 col-sm-3">
+            <input type="text" ng-model="group_rol_3" id="group_rol_3" class="form-control input-sm" placeholder="introduce un rol">
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary btn-sm" ng-click="submit()">Crear</button>
+    <button type="button" class="btn btn-danger btn-sm" ng-click="cancel()">Cancelar</button>
+  </div>
+</div>

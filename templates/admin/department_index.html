@@ -2,7 +2,10 @@
 {% load i18n admin_urls admin_static admin_modify %}
 {% load djangular_tags %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/departament_index.css" %}" />{% endblock %}
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static "admin/css/departament_index.css" %}"/>
+{% endblock %}
 
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>

@@ -1,4 +1,4 @@
-import datetime
+import datetime, json
 from rest_framework import generics, permissions
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 
 from turnos.serializer import DepartmentS, RoleS, PersonS, CalendarS, EventS, EventIdS
 from turnos.models import Department, Role, Person, Calendar, Event, EventId
-from turnos.serializer import EventSerializer
+from turnos.serializer import EventSerializer, GroupSerializer
 
 
 class DepartmentList(generics.ListCreateAPIView):
@@ -17,16 +17,49 @@ class DepartmentList(generics.ListCreateAPIView):
 
 
   def perform_create(self, serializer):
-    print(serializer.data)
     serializer.save()
 
 class GroupDetailAPI(generics.RetrieveUpdateDestroyAPIView):
-  serializer_class = DepartmentS
+  serializer_class = GroupSerializer
   queryset = Department.objects.all()
 
-class PersonListAPI(generics.ListAPIView):
-  serializer_class = PersonS
-  queryset = Person.objects.all()
+class PersonListAPI(APIView):
+
+  def get(self, request, format=None):
+    snippets = Person.objects.all()
+    serializer = PersonS(snippets, many=True)
+    return Response(serializer.data)
+
+  def post(self, request, format=None):
+    data = request.data
+    new_data = {
+      'name' : data.get('name'),
+      'first_surname' : data.get('first_surname'),
+      'second_surname' : data.get('second_surname', '' ),
+      'email' : data.get('email', ''),
+      'address' : data.get('address', ''),
+      'pbox' : data.get('pbox', ''),
+      'city' : data.get('city', ''),
+      'province' : data.get('province', ''),
+      'country' : data.get('country', ''),
+      'number' : data.get('number', ''),
+      'nationality' : data.get('nationality', ''),
+    }
+
+    serializer = PersonS(data = new_data)
+
+    if serializer.is_valid():
+      serializer.save()
+
+      new_person = Person.objects.get(pk=serializer.data.get('id'))
+
+      for i in data.get('department'):
+        group = get_object_or_404(Department, pk=i)
+        new_person.department.add(group)
+
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RoleListAPI(generics.ListAPIView):
   serializer_class = RoleS
@@ -74,10 +107,8 @@ class GroupScheduleAPI(APIView):
                                   'department' : group_pk,
                                   'observation' : observation})
 
-    print('Over Here')
     if serializer.is_valid():
       serializer.save()
-      print('new calendar created')
 
       return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -89,11 +120,11 @@ class GroupEventAPI(APIView):
   def get(self, request, group_pk, calendar_pk, format=None):
     calendar = get_object_or_404(Calendar, pk=calendar_pk)
     snippets = Event.objects.filter(calendar=calendar)
-    serializer = EventS(snippets, many=True)
+    serializer = EventSerializer(snippets, many=True)
     return Response(serializer.data)
 
+  # Adds new event to a particular calendar(month) of certain department
   def post(self, request, group_pk, calendar_pk, format=None):
-    print(request.data)
     # Confirm that pk exists
     calendar = get_object_or_404(Calendar, pk=calendar_pk)
 
@@ -162,12 +193,10 @@ class GroupListAPI(APIView):
     """
     def get(self, request, format=None):
         snippets = Department.objects.all()
-        print('Over Here')
         serializer = DepartmentS(snippets, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-      print(request.data)
       # retrieve title
       department = {'title' : request.data.get('title')}
 
@@ -183,9 +212,8 @@ class GroupListAPI(APIView):
         # Check if we have new roles to save
         if 'newRole_1' in request.data:
           role = {'title' : request.data.get('newRole_1'), 'department': pk}
-
           rolS = RoleS(data=role)
-          print('Over Here')
+
           if rolS.is_valid():
             rolS.save()
           else:

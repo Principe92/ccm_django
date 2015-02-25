@@ -13,7 +13,7 @@ function Groups($http, djangoUrl, $q) {
 
   var Groups = {
     all: all,
-    create: create,
+    newGroup: newGroup,
     get: get,
     list : list,
     scheduleList : getScheduleList,
@@ -131,12 +131,7 @@ function Groups($http, djangoUrl, $q) {
   * @returns {Promise}
   * @memberOf turnos.group.services.Groups
   */
-  function create(content) {
-    var data = {title : content.title,
-                newRole_1: content.newRole_1,
-                newRole_2: content.newRole_2,
-                newRole_3: content.newRole_3};
-
+  function newGroup(data) {
     return $http.post(djangoUrl.reverse('ccm:group_listAPI'), data);
   }
 

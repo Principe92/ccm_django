@@ -3,15 +3,15 @@ angular
   .controller('GroupMemberController', GroupMemberController)
   .controller('GroupRoleController', GroupRoleController);
 
-GroupMemberController.$inject = ['$rootScope','$scope', '$log', 'groups', 'turns', 'members'];
-GroupRoleController.$inject = ['$rootScope','$scope', '$log', 'groups', 'turns', 'roles', 'Groups'];
+GroupMemberController.$inject = ['$rootScope','$scope', '$log', 'groups', 'turns', 'members', '$modal'];
+GroupRoleController.$inject = ['$rootScope','$scope', '$log', 'groups', 'turns', 'roles', 'Groups', '$modal'];
 
 // List of months
 var month_list = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'July',
                     'Agosto', 'Septiembre', 'Octobre', 'Noviembre', 'Diciembre'];
 
 
-function GroupMemberController($rootScope, $scope, $log, group, turns, members){
+function GroupMemberController($rootScope, $scope, $log, group, turns, members, $modal){
 
   $scope.scheduleList = turns;
   $scope.memberList = members;
@@ -29,10 +29,56 @@ function GroupMemberController($rootScope, $scope, $log, group, turns, members){
     $scope.monthNames[i] = month_list[date.getMonth()];
   }
 
+  // Initialize the new month Modal
+  $scope.openNewMonth = function (size){
+
+    var instance = $modal.open({
+      templateUrl: '/ccm/modal/view/new_month.html',
+      controller: 'new_monthCtrl',
+      size : size,
+      resolve: {
+        group_id: function () {
+          return $scope.group_id;
+        }
+      }
+    });
+
+    instance.result.then(
+      function(data){
+      },
+
+      function (){
+         $log.info('Modal dismissed at: ' + new Date());
+      });
+    };
+
+    // Initialize the new role Modal
+    $scope.openNewRole = function (size){
+
+      var instance = $modal.open({
+        templateUrl: '/ccm/modal/view/new_role.html',
+        controller: 'new_roleCtrl',
+        size : size,
+        resolve: {
+          group_id: function () {
+            return $scope.group_id;
+          }
+        }
+      });
+
+      instance.result.then(
+        function(data){
+        },
+
+        function (){
+           $log.info('Modal dismissed at: ' + new Date());
+        });
+      };
+
 }
 
 
-function GroupRoleController($rootScope, $scope, $log, groups, turns, roles, Groups){
+function GroupRoleController($rootScope, $scope, $log, groups, turns, roles, Groups, $modal){
 
   $scope.scheduleList = turns;
   $scope.roleList = roles;
@@ -49,4 +95,51 @@ function GroupRoleController($rootScope, $scope, $log, groups, turns, roles, Gro
     var date = new Date(turns[i].month)
     $scope.monthNames[i] = month_list[date.getMonth()];
   }
+
+  // Initialize the new month Modal
+  $scope.openNewMonth = function (size){
+
+    var instance = $modal.open({
+      templateUrl: '/ccm/modal/view/new_month.html',
+      controller: 'new_monthCtrl',
+      size : size,
+      resolve: {
+        group_id: function () {
+          return $scope.group_id;
+        }
+      }
+    });
+
+    instance.result.then(
+      function(data){
+      },
+
+      function (){
+         $log.info('Modal dismissed at: ' + new Date());
+      });
+    };
+
+    // Initialize the new role Modal
+    $scope.openNewRole = function (size){
+
+      var instance = $modal.open({
+        templateUrl: '/ccm/modal/view/new_role.html',
+        controller: 'new_roleCtrl',
+        size : size,
+        resolve: {
+          group_id: function () {
+            return $scope.group_id;
+          }
+        }
+      });
+
+      instance.result.then(
+        function(data){
+        },
+
+        function (){
+           $log.info('Modal dismissed at: ' + new Date());
+        });
+      };
+
 }

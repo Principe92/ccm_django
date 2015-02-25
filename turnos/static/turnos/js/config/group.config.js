@@ -28,9 +28,9 @@ angular
           templateUrl: '/ccm/partial/view/group_detail.html',
           controller: 'myGroupJSControl',
           resolve: {
-            turns : getSchedules,
+          //  turns : getSchedules,
             group : getGroup,
-            members : getMember,
+          //  members : getMember,
             events : getEvents,
             roles : getRoles
           }
@@ -82,6 +82,7 @@ angular
 
     function getGroupList(Groups){
       var data = Groups.list();
+      console.log('group list', data);
       return data;
     }
 

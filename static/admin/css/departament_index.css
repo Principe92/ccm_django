@@ -76,13 +76,6 @@ label, legend{
   margin-left: 4px;
 }
 
-input[type=text]{
-  width: 20em;
-  display: inline-block;
-  vertical-align: middle;
-  margin: 0 8px;
-}
-
 .error{
   display: inline-block;
 }

@@ -23,9 +23,9 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a ng-click="show_monthForm = !show_monthForm" href="#">Nuevo mes</a></li>
+            <li><a ng-click="openNewMonth()" href="#">Nuevo mes</a></li>
             <li class="divider"></li>
-            <li><a href="#">Nuevo rol</a></li>
+            <li><a ng-click="openNewRole()" href="#">Nuevo rol</a></li>
             <li class="divider"></li>
             <li><a href="#">Añadir miembro</a></li>
           </ul>
@@ -39,40 +39,6 @@
 </nav>
 
 <div id="content">
-  <!-- FORM -->
-  <div class="panel panel-primary" collapse="show_roleForm">
-    <!-- Heading -->
-    <div class="panel-heading">
-      <h3 class="panel-title">
-        NUEVO ROL
-      </h3>
-    </div>
-
-    <!-- Body -->
-    <div id="create_body">
-      <form class="form-horizontal" name="newRoleForm" accept-charset="UTF-8" autocomplete="off" novalidate>
-
-        <div class="form-group">
-          <label class="col-sm-1 control-label" for="role_title"> Titulo: </label>
-          <div class="col-xs-4">
-            <input type="text" ng-model="role_title" id="role_title" class="form-control input-sm" aria-describedby="help">
-            <span id="help" class="help-block">Ejemplo: Domingo 1&ordf; Reunion</span>
-          </div>
-        </div>
-
-        <!-- BUTTON BOX -->
-        <div class="form-group">
-          <div class="col-sm-offset-1 col-sm-10">
-            <button type="submit" class="btn btn-primary btn-sm" ng-click="submit()">Crear</button>
-            <button type="button" class="btn btn-sm btn-danger" ng-click="clean()">Cancelar</button>
-          </div>
-        </div>
-      </form>
-    </div>
-    <!-- END Body -->
-  </div>
-  <!-- END Form -->
-
   <div class="panel panel-default">
 
     <div class="panel-heading">

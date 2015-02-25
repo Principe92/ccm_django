@@ -3,14 +3,15 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
-/* 
+/*
     Created on : Dec 18, 2014, 9:12:05 AM
     Author     : Principe
 */
-li a {
-    color: green;
+
+.box{
+  min-height: 5em;
 }
 
-body {
-    background: white url("images/background.jpg");
+.center{
+  
 }

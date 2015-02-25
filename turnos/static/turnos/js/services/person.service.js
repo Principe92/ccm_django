@@ -12,7 +12,8 @@ function Persons($http, djangoUrl, $q) {
   'use strict';
 
   var Persons = {
-    list : list
+    list : list,
+    newPerson : newPerson
   };
 
   return Persons;
@@ -28,5 +29,9 @@ function Persons($http, djangoUrl, $q) {
         defer.reject(status);
       });
     return defer.promise;
+  }
+
+  function newPerson(data){
+    return $http.post(djangoUrl.reverse('ccm:person_listAPI'), data);
   }
 };

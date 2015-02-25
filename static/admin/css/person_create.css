@@ -27,11 +27,6 @@
   vertical-align: middle;
 }
 
-input[type=text], input[type=email]{
-  vertical-align: middle;
-  width: 20em;
-}
-
 input[type=checkbox]{
   background: url('../img/ic_check_box_outline_blank_black_18dp.png') no-repeat;
   margin-right: 8px;
