@@ -13,13 +13,13 @@ function Persons($http, djangoUrl, $q) {
 
   var Persons = {
     list : list,
-    newPerson : newPerson
+    newPerson : newPerson,
+    newEventRole : newEventRole
   };
 
   return Persons;
 
   function list() {
-  //  return $http.get('/ccm/test/sys/group_list/')
     var defer = $q.defer()
     $http.get(djangoUrl.reverse('ccm:person_listAPI'))
       .success(function(data, status, headers, config){
@@ -33,5 +33,12 @@ function Persons($http, djangoUrl, $q) {
 
   function newPerson(data){
     return $http.post(djangoUrl.reverse('ccm:person_listAPI'), data);
+  }
+
+  function newEventRole(person_pk, event_pk, data){
+    console.log(data);
+    console.log('Person: ' + person_pk);
+    console.log('Event: ' + event_pk);
+    return $http.post(djangoUrl.reverse('ccm:person_eventAPI', [person_pk, event_pk]), data);
   }
 };

@@ -6,8 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
-from turnos.serializer import DepartmentS, RoleS, PersonS, CalendarS, EventS, EventIdS
-from turnos.models import Department, Role, Person, Calendar, Event, EventId
+from turnos.serializer import DepartmentS, RoleS, PersonS, CalendarS, EventS, EventIdS, EventRolesS
+from turnos.models import Department, Role, Person, Calendar, Event, EventId, EventRoles
 from turnos.serializer import EventSerializer, GroupSerializer
 
 
@@ -22,6 +22,34 @@ class DepartmentList(generics.ListCreateAPIView):
 class GroupDetailAPI(generics.RetrieveUpdateDestroyAPIView):
   serializer_class = GroupSerializer
   queryset = Department.objects.all()
+
+class PersonEventRolesAPI(APIView):
+  def get(self, request, person_pk, event_pk, format=None):
+    snippet = EventRoles.objects.filter(event__pk=event_pk, persons__pk=person_pk)
+    serializer = EventRolesS(snippet, many=True)
+    return Response(serializer.data)
+
+  def post(self, request, person_pk, event_pk, format=None):
+    data = request.data
+    roles = data.get('roles')
+    person = get_object_or_404(Person, pk=person_pk)
+    event = get_object_or_404(Event, pk=event_pk)
+
+
+    for id in roles:
+      post = get_object_or_404(Role, pk=id)
+
+      try:
+        arg = EventRoles.objects.get(event=event, role=post)
+        arg.persons.add(person)
+
+      except (KeyError, EventRoles.DoesNotExist):
+        arg = EventRoles.objects.create(event=event, role=post)
+        arg.persons.add(person)
+
+    snippet = EventRoles.objects.filter(event=event, persons__pk=person_pk)
+    serializer = EventRolesS(snippet, many=True)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class PersonListAPI(APIView):
 

@@ -10,8 +10,18 @@ and open the template in the editor.
 
 .box{
   min-height: 5em;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 8px;
+  background: #B2DFDB;
 }
 
 .center{
-  
+
+}
+
+.modifyRoleIcon{
+  z-index: 999;
+  float: right;
+  display: inline-block;
 }

@@ -8,16 +8,16 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Turnos <span class="caret"></span></a>
           <ul class="dropdown-menu list-group" role="menu">
             <li class="list-group-item" ng-repeat="turn in scheduleList">
-              <a href="/ccm/department/{$ turn.department $}/turns/{$ turn.id $}">{$ monthNames[$index] $}</a>
+              <a href="/ccm/department/{$ group_id $}/turns/{$ turn.id $}/">{$ monthNames[$index] $}</a>
             </li>
           </ul>
         </li>
 
         <!-- Miembros -->
-        <li><a href="/ccm/department/{$ group_id $}/members">Miembros</a></li>
+        <li><a href="/ccm/department/{$ group_id $}/members/">Miembros</a></li>
 
         <!-- Roles -->
-        <li><a href="/ccm/department/{$ group_id $}/roles">Roles</a></li>
+        <li><a href="/ccm/department/{$ group_id $}/roles/">Roles</a></li>
 
         <!-- Turnos -->
         <li class="dropdown">
@@ -47,7 +47,7 @@
 
         <!-- BEGIN CONTENT HEADER -->
         <h1 class="navbar-text navbar-left create_title">
-          TURNOS
+          {$ currentMonth $}
         </h2>
         <!-- END CONTENT HEADER -->
 
@@ -110,11 +110,16 @@
           </div>
         </div>
 
-        <div class="row box" ng-repeat="member in memberList">
+        <div class="row box" ng-repeat="member in turnTable">
           <div class="col-md-2"> <p>{$ member.name $} {$ member.first_surname $} </p></div>
 
-          <div class="col-md-2" ng-repeat="event in eventList">
-            <div id="role_menu">
+          <div class="col-md-2" ng-repeat="event in member.events">
+
+            <ul class="list-group">
+              <li class="list-group-item" ng-repeat="post in event.roles"> {$ post.title $} </li>
+            </ul>
+
+            <div class="modifyRoleIcon" id="role_menu">
               <a id="{$ 'who_' + member.id + '_event_' + event.id $}" href="#" ng-click="modifyRole($event)">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
               </a>

@@ -10,7 +10,7 @@ angular
   new_roleCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id'];
   new_eventCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id', 'calendar_id'];
   new_groupCtrl.$inject = ['$scope', '$modalInstance', 'Groups'];
-  person_roleCtrl.$inject = ['$scope', '$modalInstance', 'roles', 'member'];
+  person_roleCtrl.$inject = ['$scope', '$modalInstance', 'Persons', 'roles', 'member'];
 
   function new_monthCtrl($scope, $modalInstance, Groups, group_id){
     // List of months
@@ -217,7 +217,84 @@ angular
     }
   }
 
-  function person_roleCtrl($scope, $modalInstance, roles, member){
+  function person_roleCtrl($scope, $modalInstance, Persons, roles, member){
     $scope.roleList = roles;
-    $scope.member = member;
+    $scope.member = member.person;
+
+    // Load default values
+    loadDefault();
+
+    // Save the new roles
+    $scope.submit = function (){
+
+      if ($scope.mForm.$dirty && $scope.mForm.$valid){
+        console.log('form is dirty');
+
+        // Check which boxes were checked and their ids to the list
+        var roles = [];
+        for (i = 0; i<$scope.roleList.length; i++){
+          var id = $scope.roleList[i].id;
+
+          if ($('#' + id).is(":checked")){
+            roles.push(id);
+          }
+        }
+
+        // submit the roles for saving
+        if (roles.length != 0){
+          data = {'roles': roles};
+          Persons.newEventRole(member.person.id, member.event.id, data).then(success, error);
+        }
+        else{
+          alert("Debes seleccionar un rol antes de guardar");
+        }
+
+      }
+
+      // We didn't change anything in the form, so just close
+      else{
+        $modalInstance.dismiss('cancel');
+      }
+
+    }
+
+    // Cancel the modal
+    $scope.cancel = function(){
+      // Warn the user to save changes before leaving
+      if ($scope.mForm.$dirty){
+        alert("Debes guardar los cambios");
+      }
+
+      else{
+        $modalInstance.dismiss('cancel');
+      }
+    }
+
+    function loadDefault(){
+      for(i = 0; i < $scope.roleList.length; i++){
+        var id = $scope.roleList[i].id;
+
+        // Check if role is in the list of the roles of the member
+        for (j = 0; j < member.event.roles.length; j++){
+          var assigned = member.event.roles[j].id;
+
+          if (assigned == id){
+            // Set the checkbox to checked
+            console.log(id);
+            $('#' + id).attr('checked', 'checked');
+          }
+        }
+      }
+
+    //  $scope.mForm.$setPristine();
+    }
+
+    function success(data, status, headers, config){
+     console.log('roles modified !!');
+     $modalInstance.close(data);
+    }
+
+   function error(data, status, headers, config){
+     console.log('Error modifying role !!')
+   }
   }

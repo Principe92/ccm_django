@@ -14,8 +14,20 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
   var vm = this;
 
   // List of months
-  $scope.month_list = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'July',
-                      'Agosto', 'Septiembre', 'Octobre', 'Noviembre', 'Diciembre'];
+  $scope.month_list = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'July',
+      'Agosto',
+      'Septiembre',
+      'Octobre',
+      'Noviembre',
+      'Diciembre'
+  ];
 
   $scope.scheduleList = group.data.calendars;
   $scope.monthNames = [];
@@ -24,7 +36,19 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
   $scope.memberList = group.data.members;
   $scope.roleList = roles;
   $scope.eventList = events;
+
+  // Create table object
+  $scope.turnTable = [];
+  formTable();
+
   var calendar_id = $route.current.params.month
+
+  // Set current month
+  for (i = 0; i<$scope.scheduleList.length; i++){
+    if ($scope.scheduleList[i].id == calendar_id){
+      $scope.currentMonth = getMonthName($scope.scheduleList[i].month);
+      }
+  }
 
   //$scope.empty = $scope.scheduleList.length == 0;
 
@@ -32,7 +56,7 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
   $scope.openNewMonth = function (size){
 
     var instance = $modal.open({
-      templateUrl: '/ccm/modal/view/new_month.html',
+      templateUrl: '/ccm/modal/view/new_month.html/',
       controller: 'new_monthCtrl',
       size : size,
       resolve: {
@@ -55,7 +79,7 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
     $scope.openNewRole = function (size){
 
       var instance = $modal.open({
-        templateUrl: '/ccm/modal/view/new_role.html',
+        templateUrl: '/ccm/modal/view/new_role.html/',
         controller: 'new_roleCtrl',
         size : size,
         resolve: {
@@ -78,7 +102,7 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
       $scope.openNewEvent = function (size){
 
         var instance = $modal.open({
-          templateUrl: '/ccm/modal/view/new_event.html',
+          templateUrl: '/ccm/modal/view/new_event.html/',
           controller: 'new_eventCtrl',
           size : size,
           resolve: {
@@ -107,23 +131,34 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
           var event_id = parseInt(split[3], 10);
 
           var instance = $modal.open({
-            templateUrl: '/ccm/modal/view/person_role.html',
+            templateUrl: '/ccm/modal/view/person_role.html/',
             controller: 'person_roleCtrl',
             resolve: {
               roles: function(){ return $scope.roleList; },
 
               member: function(){
+                var member;
+                var events;
+
+                // Get the member
                 for (i=0; i< $scope.memberList.length; i++){
                   if (person_id == $scope.memberList[i].id){
-                    return $scope.memberList[i];
+                    member = $scope.memberList[i];
                   }
                 }
+
+                // Return an object
+                return {
+                  'person': member,
+                  'event': getEvent(person_id, event_id)
+                };
+              }
             }
-          }
           });
 
           instance.result.then(
             function(data){
+              console.log('New role', data);
             },
 
             function (){
@@ -132,8 +167,7 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
           };
 
   for (i = 0; i<$scope.scheduleList.length; i++){
-    var date = new Date($scope.scheduleList[i].month)
-    $scope.monthNames[i] = $scope.month_list[date.getMonth()];
+    $scope.monthNames[i] = getMonthName($scope.scheduleList[i].month);
   }
 
   if ($scope.scheduleList.length == 0){
@@ -146,6 +180,78 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
   // $("#role_menu").addClass("event_menu_icon");
 
   //var csrftoken = $.cookie('csrftoken');
+
+  // retrieves the month name of a date object
+  function getMonthName(arg){
+    var date = new Date(arg);
+    return $scope.month_list[date.getMonth()];
+  }
+
+  function getEvent(person_id, event_id){
+    for (i = 0; i<$scope.turnTable.length; i++){
+      var person = $scope.turnTable[i];
+
+      if (person.id == person_id){
+
+        // Find the event and return its roles
+        for (j = 0; j < person.events.length; j++){
+          var arg = person.events[j];
+
+          if (arg.id == event_id){
+            return arg;
+          }
+        }
+      }
+    }
+  }
+
+  function formTable(){
+    for (i = 0; i<$scope.memberList.length; i++){
+      var person = $scope.memberList[i];
+
+      var skeleton = {
+        'id': person.id,
+        'name': person.name,
+        'first_surname': person.first_surname,
+        'events': []
+      };
+
+      // Add roles for each event
+      for (j = 0; j<events.length; j++){
+        var arg = events[j];
+
+        var sketch = {
+          'id': arg.id,
+          'number': arg.event_number.number,
+          'title': arg.title,
+          'date': arg.date,
+          'roles': []
+        };
+
+        // Get the roles
+        for (k = 0; k<arg.eventList.length; k++){
+          var eventroles = arg.eventList[k];
+
+          for (l = 0; l<eventroles.persons.length; l++){
+            var member = eventroles.persons[l];
+
+            // If member is in the role list, add the role to his list for the event
+            if (member.id == person.id){
+              sketch.roles.push({'id': eventroles.role.id, 'title': eventroles.role.title});
+            }
+          }
+        }
+
+        // Add an event to the members event list
+        skeleton.events.push(sketch);
+      }
+
+      // Add person to turnTable
+      $scope.turnTable.push(skeleton);
+    }
+
+    console.log($scope.turnTable);
+  }
 }
 
 
@@ -161,7 +267,7 @@ function GroupJSControl($rootScope, $scope, $http, Groups, $log, groupList, $mod
   $scope.openNewGroup = function (size){
 
     var instance = $modal.open({
-      templateUrl: '/ccm/modal/view/new_group.html',
+      templateUrl: '/ccm/modal/view/new_group.html/',
       controller: 'new_groupCtrl',
       size : size
     });

@@ -117,9 +117,10 @@ class Response(models.Model):
 
 # Service Role table - stores all the roles assigned to each person
 class EventRoles(models.Model):
-    event = models.ForeignKey(Event)
-    role = models.ForeignKey(Role)
-    persons = models.ManyToManyField(Person)
+    event = models.ForeignKey(Event, related_name='eventList')
+    role = models.ForeignKey(Role, related_name='roleList')
+    persons = models.ManyToManyField(Person, related_name='memberList')
 
     class Meta:
         db_table = "event_roles"
+        unique_together = ("event", "role")

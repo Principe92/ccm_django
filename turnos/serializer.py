@@ -35,12 +35,37 @@ class EventS(serializers.ModelSerializer):
   class Meta:
     model = Event
 
+class EventRolesS(serializers.ModelSerializer):
+  persons = PersonS2(many=True, required=False)
+
+  class Meta:
+    model = EventRoles
+
+#-------------------------------------------------------------------------------
+# Serializers of an event for a particular calendar of a department
+class getPersons(serializers.ModelSerializer):
+  persons = PersonS2(many=True, required=False)
+  role = RoleS(required=False)
+
+  class Meta:
+    model = EventRoles
+    fields = ('persons', 'role', 'event')
+
+class getRoles(serializers.ModelSerializer):
+  roleList = getPersons(many=True, required=False)
+
+  class Meta:
+    model = Role
+    fields = ('id', 'title', 'roleList')
+
 class EventSerializer(serializers.ModelSerializer):
   event_number = EventIdS(required=False)
+  eventList = getPersons(many=True, required=False)
 
   class Meta:
     model = Event
-    fields = ('id', 'title', 'date', 'event_number', 'roles')
+    fields = ('id', 'title', 'date', 'event_number', 'eventList')
+# ------------------------------------------------------------------------------
 
 class miniCalendar(serializers.ModelSerializer):
   class Meta:

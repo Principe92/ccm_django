@@ -5,26 +5,30 @@
   </div>
 
   <div class="modal-body">
-    <form class="form-horizontal" name="personRoleForm" accept-charset="UTF-8" autocomplete="off">
+    <form class="form-horizontal" name="form" accept-charset="UTF-8" autocomplete="off">
 
-      <div class="form-group form-group-sm">
-        <ul class="list-group">
-          <li class="list-group-item" ng-repeat="role in roleList">
-            <div class="checkbox">
+
+        <div class="list-group">
+
+            <div class="checkbox list-group-item" ng-repeat="role in roleList">
               <label>
-                <input type="checkbox" value="{$ role.id $}"> {$ role.title $}
+                <input type="checkbox" ng-model="rolX" name="role" id="{$ role.id $}" value="{$ role.id $}">
+                {$ role.title $}
               </label>
             </div>
-          </li>
-        </ul>
-      </div>
+
+        </div>
+
 
     </form>
+
+    <button type="submit" class="btn btn-success btn-sm" ng-click="rest()">Libre</button>
+    <button type="submit" class="btn btn-default btn-sm" ng-click="free()">No convocado</button>
   </div>
 
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary btn-sm" ng-click="submit()">Guardar</button>
-    <button type="button" class="btn btn-danger btn-sm" ng-click="clean()">Cancelar</button>
+    <button type="button" class="btn btn-danger btn-sm" ng-click="cancel()">Cancelar</button>
   </div>
 
 </div>

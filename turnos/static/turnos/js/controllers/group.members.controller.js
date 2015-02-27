@@ -33,7 +33,7 @@ function GroupMemberController($rootScope, $scope, $log, group, turns, members, 
   $scope.openNewMonth = function (size){
 
     var instance = $modal.open({
-      templateUrl: '/ccm/modal/view/new_month.html',
+      templateUrl: '/ccm/modal/view/new_month.html/',
       controller: 'new_monthCtrl',
       size : size,
       resolve: {
@@ -56,7 +56,7 @@ function GroupMemberController($rootScope, $scope, $log, group, turns, members, 
     $scope.openNewRole = function (size){
 
       var instance = $modal.open({
-        templateUrl: '/ccm/modal/view/new_role.html',
+        templateUrl: '/ccm/modal/view/new_role.html/',
         controller: 'new_roleCtrl',
         size : size,
         resolve: {
@@ -100,7 +100,7 @@ function GroupRoleController($rootScope, $scope, $log, groups, turns, roles, Gro
   $scope.openNewMonth = function (size){
 
     var instance = $modal.open({
-      templateUrl: '/ccm/modal/view/new_month.html',
+      templateUrl: '/ccm/modal/view/new_month.html/',
       controller: 'new_monthCtrl',
       size : size,
       resolve: {
@@ -123,7 +123,7 @@ function GroupRoleController($rootScope, $scope, $log, groups, turns, roles, Gro
     $scope.openNewRole = function (size){
 
       var instance = $modal.open({
-        templateUrl: '/ccm/modal/view/new_role.html',
+        templateUrl: '/ccm/modal/view/new_role.html/',
         controller: 'new_roleCtrl',
         size : size,
         resolve: {

@@ -16,16 +16,16 @@ angular
 
     // Department List
     $routeProvider
-        .when("/ccm/department", {
-          templateUrl: '/ccm/partial/view/group_main.html',
+        .when("/ccm/department/", {
+          templateUrl: '/ccm/partial/view/group_main.html/',
           controller: 'GroupJSControl',
           resolve: {
             groupList : getGroupList
           }
         })
 
-        .when("/ccm/department/:id/turns/:month", {
-          templateUrl: '/ccm/partial/view/group_detail.html',
+        .when("/ccm/department/:id/turns/:month/", {
+          templateUrl: '/ccm/partial/view/group_detail.html/',
           controller: 'myGroupJSControl',
           resolve: {
           //  turns : getSchedules,
@@ -36,8 +36,8 @@ angular
           }
         })
 
-        .when("/ccm/department/:id/members", {
-          templateUrl: '/ccm/partial/view/group_members.html',
+        .when("/ccm/department/:id/members/", {
+          templateUrl: '/ccm/partial/view/group_members.html/',
           controller: 'GroupMemberController',
           resolve: {
             turns : getSchedules,
@@ -46,8 +46,8 @@ angular
           }
         })
 
-        .when("/ccm/department/:id/roles", {
-          templateUrl: '/ccm/partial/view/group_roles.html',
+        .when("/ccm/department/:id/roles/", {
+          templateUrl: '/ccm/partial/view/group_roles.html/',
           controller: 'GroupRoleController',
           resolve: {
             turns : getSchedules,
@@ -56,8 +56,8 @@ angular
           }
         })
 
-        .when("/ccm/person", {
-          templateUrl: '/ccm/partial/view/person_main.html',
+        .when("/ccm/person/", {
+          templateUrl: '/ccm/partial/view/person_main.html/',
           controller: 'PersonController',
           resolve: {
             persons : getPersons
@@ -72,8 +72,8 @@ angular
           }
         })
 
-        .when("/ccm/person/:id/details", {
-          templateUrl: '/ccm/partial/view/person_details.html',
+        .when("/ccm/person/:id/details/", {
+          templateUrl: '/ccm/partial/view/person_details.html/',
         })
 
         .otherwise({
