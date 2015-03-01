@@ -64,7 +64,8 @@ modal_url = patterns('',
   url(r'^view/new_role.html/$', GroupPartialView.as_view(template_name = 'turnos/modals/new_role.html'), name='new_roleModal'),
   url(r'^view/new_event.html/$', GroupPartialView.as_view(template_name = 'turnos/modals/new_event.html'), name='new_eventModal'),
   url(r'^view/new_group.html/$', GroupPartialView.as_view(template_name = 'turnos/modals/new_group.html'), name='new_groupModal'),
-  url(r'^view/person_role.html/$', GroupPartialView.as_view(template_name = 'turnos/modals/person_role.html'), name='person_roleModal')
+  url(r'^view/person_role.html/$', GroupPartialView.as_view(template_name = 'turnos/modals/person_role.html'), name='person_roleModal'),
+  url(r'^view/dialog.html/$', GroupPartialView.as_view(template_name = 'turnos/modals/dialog.html'), name='dialogModal')
 )
 
 

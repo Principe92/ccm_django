@@ -37,6 +37,9 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
   $scope.roleList = roles;
   $scope.eventList = events;
 
+  var defEvent = {};
+  $scope.updateEvent = false;
+
   // Create table object
   $scope.turnTable = [];
   formTable();
@@ -58,6 +61,7 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
     var instance = $modal.open({
       templateUrl: '/ccm/modal/view/new_month.html/',
       controller: 'new_monthCtrl',
+      backdrop: false, // Do not close window if you click outside it
       size : size,
       resolve: {
         group_id: function () {
@@ -75,96 +79,148 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
       });
     };
 
-    // Initialize the new role Modal
-    $scope.openNewRole = function (size){
+  // Initialize the new role Modal
+  $scope.openNewRole = function (size){
 
-      var instance = $modal.open({
-        templateUrl: '/ccm/modal/view/new_role.html/',
-        controller: 'new_roleCtrl',
-        size : size,
-        resolve: {
-          group_id: function () {
-            return $scope.group_id;
-          }
+    var instance = $modal.open({
+      templateUrl: '/ccm/modal/view/new_role.html/',
+      controller: 'new_roleCtrl',
+      backdrop: false, // Do not close window if you click outside it
+      size : size,
+      resolve: {
+        group_id: function () {
+          return $scope.group_id;
         }
+      }
+    });
+
+    instance.result.then(
+      function(data){
+      },
+
+      function (){
+         $log.info('Modal dismissed at: ' + new Date());
       });
+  };
 
-      instance.result.then(
-        function(data){
-        },
+  // Initialize the new event Modal
+  $scope.openNewEvent = function (size){
 
-        function (){
-           $log.info('Modal dismissed at: ' + new Date());
-        });
-      };
 
-      // Initialize the new event Modal
-      $scope.openNewEvent = function (size){
+    var instance = $modal.open({
+      templateUrl: '/ccm/modal/view/new_event.html/',
+      controller: 'new_eventCtrl',
+      backdrop: false, // Do not close window if you click outside it
+      size : size,
+      resolve: {
+        group_id: function(){ return $scope.group_id; },
+        defForm: defEvent,
+        isNew: function(){ console.log($scope.updateEvent); return $scope.updateEvent; },
+        calendar_id: function(){ return $scope.calendar_id; }
+      }
+    });
 
-        var instance = $modal.open({
-          templateUrl: '/ccm/modal/view/new_event.html/',
-          controller: 'new_eventCtrl',
-          size : size,
-          resolve: {
-            group_id: function(){ return $scope.group_id; },
+    instance.result.then(
+      function(data){
+        // Disable update
+        $scope.updateEvent = false;
+      },
 
-            calendar_id: function(){ return $scope.calendar_id; }
-          }
-        });
+      function (){
+         $log.info('Modal dismissed at: ' + new Date());
+         $scope.updateEvent = false;
+      });
+  };
 
-        instance.result.then(
-          function(data){
-          },
+// Initialize the new event Modal
+  $scope.modifyRole = function(event){
+    var dom = event.currentTarget.id;
 
-          function (){
-             $log.info('Modal dismissed at: ' + new Date());
-          });
-        };
+    // Split dom to extract ids
+    var split = dom.split("_");
+    var person_id = parseInt(split[1], 10);
+    var event_id = parseInt(split[3], 10);
 
-        // Initialize the new event Modal
-        $scope.modifyRole = function(event){
-          var dom = event.currentTarget.id;
+    var instance = $modal.open({
+      templateUrl: '/ccm/modal/view/person_role.html/',
+      controller: 'person_roleCtrl',
+      backdrop: false, // Do not close window if you click outside it
+      resolve: {
+        roles: function(){ return $scope.roleList; },
 
-          // Split dom to extract ids
-          var split = dom.split("_");
-          var person_id = parseInt(split[1], 10);
-          var event_id = parseInt(split[3], 10);
+        member: function(){
+          var member;
+          var events;
 
-          var instance = $modal.open({
-            templateUrl: '/ccm/modal/view/person_role.html/',
-            controller: 'person_roleCtrl',
-            resolve: {
-              roles: function(){ return $scope.roleList; },
-
-              member: function(){
-                var member;
-                var events;
-
-                // Get the member
-                for (i=0; i< $scope.memberList.length; i++){
-                  if (person_id == $scope.memberList[i].id){
-                    member = $scope.memberList[i];
-                  }
-                }
-
-                // Return an object
-                return {
-                  'person': member,
-                  'event': getEvent(person_id, event_id)
-                };
-              }
+          // Get the member
+          for (i=0; i< $scope.memberList.length; i++){
+            if (person_id == $scope.memberList[i].id){
+              member = $scope.memberList[i];
             }
-          });
+          }
 
-          instance.result.then(
-            function(data){
-              console.log('New role', data);
-            },
-
-            function (){
-               $log.info('Modal dismissed at: ' + new Date());
-            });
+          // Return an object
+          return {
+            'person': member,
+            'event': getEvent(person_id, event_id)
           };
+        }
+      }
+    });
+
+    instance.result.then(
+      function(data){
+        console.log('New role', data);
+      },
+
+      function (){}
+    );
+  };
+
+  $scope.deleteEvent = function(event){
+    var dom = event.currentTarget.id;
+
+    var instance = $modal.open({
+      templateUrl: '/ccm/modal/view/dialog.html/',
+      controller: 'DialogCtrl',
+      backdrop: false, // Do not close window if you click outside it
+      resolve: {
+        message: function(){
+          return {
+            'head': "¿Eliminar este evento?",
+            'msg': "Todos los roles de las personas convocadas serán eliminados"
+          };
+        }
+      }
+    });
+
+    instance.result.then(
+      function(){
+        console.log('El evento será eliminado');
+      },
+
+      function(){}
+    );
+  };
+
+  $scope.modifyEvent = function(event){
+    var dom = event.currentTarget.id;
+
+    // Find the event with the id
+    for (i = 0; i < events.length; i++){
+      if (dom == events[i].id){
+        $scope.defEvent = {
+          'id': events[i].id,
+          'date': events[i].date,
+          'title': events[i].title,
+          'number': events[i].event_number.number
+        };
+      }
+    }
+
+    $scope.updateEvent = true;
+    $scope.openNewEvent(); // Call the modal to that creates new events
+  }
 
   for (i = 0; i<$scope.scheduleList.length; i++){
     $scope.monthNames[i] = getMonthName($scope.scheduleList[i].month);

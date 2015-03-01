@@ -4,15 +4,41 @@ angular
   .controller('new_monthCtrl', new_monthCtrl)
   .controller('new_eventCtrl', new_eventCtrl)
   .controller('new_groupCtrl', new_groupCtrl)
+  .controller('DialogCtrl', DialogCtrl)
   .controller('person_roleCtrl', person_roleCtrl);
+
 
   new_monthCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id'];
   new_roleCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id'];
-  new_eventCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id', 'calendar_id'];
+  new_eventCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id', 'calendar_id', 'isNew', 'defForm'];
   new_groupCtrl.$inject = ['$scope', '$modalInstance', 'Groups'];
   person_roleCtrl.$inject = ['$scope', '$modalInstance', 'Persons', 'roles', 'member'];
+  DialogCtrl.$inject = ['$scope', '$modalInstance', 'message'];
+
+  function DialogCtrl($scope, $modalInstance, message){
+    $scope.msgHead = message.head;
+    $scope.msgBody = message.msg;
+    $scope.headVisible = true;
+    $scope.bodyVisible = true;
+
+    $scope.cancel = function(){
+      $modalInstance.dismiss('cancel');
+    }
+
+    $scope.eliminate = function(){
+      $modalInstance.close(true);
+    }
+  }
 
   function new_monthCtrl($scope, $modalInstance, Groups, group_id){
+    /*$scope.next_month = get_month;
+
+    function get_month(){
+      var m = new Date().getMonth() + 1;
+      if (m > 12) m = 1;
+      return m;
+    }*/
+
     // List of months
     $scope.month_list = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'July',
                         'Agosto', 'Septiembre', 'Octobre', 'Noviembre', 'Diciembre'];
@@ -67,15 +93,8 @@ angular
     }
   }
 
-  function new_eventCtrl($scope, $modalInstance, Groups, group_id, calendar_id){
-    $scope.next_month = get_month;
-
-    function get_month(){
-      var m = new Date().getMonth() + 1;
-      if (m > 12) m = 1;
-      return m;
-    }
-
+  function new_eventCtrl($scope, $modalInstance, Groups, group_id, calendar_id, isNew, defForm){
+    console.log(isNew);
 
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
     $scope.format = $scope.formats[0];
@@ -83,7 +102,6 @@ angular
     $scope.today = function() {
       $scope.dt = new Date(); //$filter('date')(new Date(),$scope.format);
     };
-    $scope.today();
 
     $scope.clear = function () {
       $scope.dt = null;
@@ -113,8 +131,6 @@ angular
     };
 
     // Initialize new Event variables
-    $scope.mytime = new Date();
-
     $scope.hstep = 1;
     $scope.mstep = 15;
 
@@ -123,10 +139,16 @@ angular
       $scope.ismeridian = ! $scope.ismeridian;
     };
 
-    // Testing
-    $scope.event_title = "Culto de ninos";
-    $scope.event_id = 708;
-
+    // Check if we are being called to update an event
+    if (isNew == false){
+      $scope.event_title = defForm.title;
+      $scope.event_id = defForm.number;
+      $scope.dt = defForm.date;
+      $scope.mytime = defForm.date;
+    } else{
+      $scope.mytime = new Date();
+      $scope.today();
+    }
 
     // Submit new event form
     $scope.submit = function(){
@@ -144,16 +166,12 @@ angular
                     minute : minute,
                     title : $scope.event_title,
                     id : parseInt($scope.event_id, 10)};
+
       Groups.newEvent($scope.group_id, calendar_id, data).then(success, error);
     }
 
     // Clear new event form
     $scope.clean = function(){
-      // make the record pristine
-      $scope.newEventForm.$setPristine();
-      $scope.mytime = null;
-      $scope.dt = null;
-      $scope.event_title = angular.copy("");
       $modalInstance.dismiss('cancel');
     }
 
@@ -222,7 +240,7 @@ angular
     $scope.member = member.person;
 
     // Load default values
-    loadDefault();
+    // loadDefault();
 
     // Save the new roles
     $scope.submit = function (){
@@ -270,23 +288,20 @@ angular
       }
     }
 
-    function loadDefault(){
-      for(i = 0; i < $scope.roleList.length; i++){
-        var id = $scope.roleList[i].id;
-
+    $scope.assigned = function(id){
         // Check if role is in the list of the roles of the member
         for (j = 0; j < member.event.roles.length; j++){
+          console.log('Index: ' + j);
           var assigned = member.event.roles[j].id;
 
           if (assigned == id){
             // Set the checkbox to checked
-            console.log(id);
-            $('#' + id).attr('checked', 'checked');
+            console.log('Assigned:' + id);
+            return true;
           }
         }
-      }
 
-    //  $scope.mForm.$setPristine();
+        return false;
     }
 
     function success(data, status, headers, config){

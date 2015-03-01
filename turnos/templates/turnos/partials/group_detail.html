@@ -81,9 +81,9 @@
         </table>
       </div> -->
 
-      <div class="container">
+      <div class="container-fluid">
 
-        <div class="row">
+        <div class="row box">
           <div class="col-md-2"><p> TECNICOS </p></div>
 
           <div class="col-md-2" ng-repeat="event in eventList">
@@ -103,8 +103,8 @@
                 <span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
               </a>
               <ul class="dropdown-menu" role="menu">
-                <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="openNewMonth()" href="#">Editar</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="openNewRole()" href="#">Borrar</a></li>
+                <li role="presentation"><a role="menuitem" id="{$ event.id $}" tabindex="-1" ng-click="modifyEvent($event)" href="#">Editar</a></li>
+                <li role="presentation"><a role="menuitem" id="{$ event.id $}" tabindex="-1" ng-click="deleteEvent($event)" href="#">Borrar</a></li>
               </ul>
             </div>
           </div>
