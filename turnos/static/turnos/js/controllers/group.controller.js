@@ -37,18 +37,18 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
   $scope.roleList = roles;
   $scope.eventList = events;
 
-  var defEvent = {};
-  $scope.updateEvent = false;
+  $scope.defEvent = {};
+  $scope.update = {'update': false};
 
   // Create table object
   $scope.turnTable = [];
   formTable();
 
-  var calendar_id = $route.current.params.month
+  $scope.calendar_id = $route.current.params.month;
 
   // Set current month
   for (i = 0; i<$scope.scheduleList.length; i++){
-    if ($scope.scheduleList[i].id == calendar_id){
+    if ($scope.scheduleList[i].id == $scope.calendar_id){
       $scope.currentMonth = getMonthName($scope.scheduleList[i].month);
       }
   }
@@ -105,8 +105,6 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
 
   // Initialize the new event Modal
   $scope.openNewEvent = function (size){
-
-
     var instance = $modal.open({
       templateUrl: '/ccm/modal/view/new_event.html/',
       controller: 'new_eventCtrl',
@@ -114,21 +112,26 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
       size : size,
       resolve: {
         group_id: function(){ return $scope.group_id; },
-        defForm: defEvent,
-        isNew: function(){ console.log($scope.updateEvent); return $scope.updateEvent; },
+        defForm: function(){ return $scope.defEvent; },
+        defLoad: function(){ return $scope.update; },
         calendar_id: function(){ return $scope.calendar_id; }
       }
     });
 
     instance.result.then(
       function(data){
+        console.log(data.data);
+
+        // Save new data
+        saveEvent(data.data);
+
         // Disable update
-        $scope.updateEvent = false;
+        $scope.update.update = false;
       },
 
       function (){
          $log.info('Modal dismissed at: ' + new Date());
-         $scope.updateEvent = false;
+         $scope.update.update = false;
       });
   };
 
@@ -180,6 +183,13 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
   $scope.deleteEvent = function(event){
     var dom = event.currentTarget.id;
 
+    // Find the event with the id
+    for (i = 0; i < events.length; i++){
+      if (dom == events[i].id){
+        var number = events[i].event_number.number;
+      }
+    }
+
     var instance = $modal.open({
       templateUrl: '/ccm/modal/view/dialog.html/',
       controller: 'DialogCtrl',
@@ -187,7 +197,7 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
       resolve: {
         message: function(){
           return {
-            'head': "¿Eliminar este evento?",
+            'head': "¿Eliminar evento " + number + "?",
             'msg': "Todos los roles de las personas convocadas serán eliminados"
           };
         }
@@ -218,7 +228,7 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
       }
     }
 
-    $scope.updateEvent = true;
+    $scope.update.update = true;
     $scope.openNewEvent(); // Call the modal to that creates new events
   }
 
@@ -307,6 +317,26 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
     }
 
     console.log($scope.turnTable);
+  }
+
+  function saveEvent(data){
+
+    // Add it to eventList
+    $scope.eventList.push(data);
+
+    // Add new column to person row
+    for (i = 0; i < $scope.turnTable.length; i++){
+      var eventBody = {
+        'id': data.id,
+        'number': data.event_number.number,
+        'title': data.title,
+        'date': data.date,
+        'roles': []
+      };
+
+      // Add a new event column to the member
+      $scope.turnTable[i].events.push(eventBody);
+    }
   }
 }
 

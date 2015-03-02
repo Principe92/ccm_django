@@ -10,7 +10,7 @@ angular
 
   new_monthCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id'];
   new_roleCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id'];
-  new_eventCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id', 'calendar_id', 'isNew', 'defForm'];
+  new_eventCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id', 'defForm', 'defLoad', 'calendar_id'];
   new_groupCtrl.$inject = ['$scope', '$modalInstance', 'Groups'];
   person_roleCtrl.$inject = ['$scope', '$modalInstance', 'Persons', 'roles', 'member'];
   DialogCtrl.$inject = ['$scope', '$modalInstance', 'message'];
@@ -93,8 +93,8 @@ angular
     }
   }
 
-  function new_eventCtrl($scope, $modalInstance, Groups, group_id, calendar_id, isNew, defForm){
-    console.log(isNew);
+  function new_eventCtrl($scope, $modalInstance, Groups, group_id, defForm, defLoad, calendar_id){
+    console.log(defForm);
 
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
     $scope.format = $scope.formats[0];
@@ -140,12 +140,13 @@ angular
     };
 
     // Check if we are being called to update an event
-    if (isNew == false){
+    if (defLoad.update){
       $scope.event_title = defForm.title;
       $scope.event_id = defForm.number;
       $scope.dt = defForm.date;
       $scope.mytime = defForm.date;
-    } else{
+    }
+    else{
       $scope.mytime = new Date();
       $scope.today();
     }
@@ -167,7 +168,7 @@ angular
                     title : $scope.event_title,
                     id : parseInt($scope.event_id, 10)};
 
-      Groups.newEvent($scope.group_id, calendar_id, data).then(success, error);
+      Groups.newEvent(group_id, calendar_id, data).then(success, error);
     }
 
     // Clear new event form
@@ -245,10 +246,11 @@ angular
     // Save the new roles
     $scope.submit = function (){
 
+      // If we changed something in the form
       if ($scope.mForm.$dirty && $scope.mForm.$valid){
         console.log('form is dirty');
 
-        // Check which boxes were checked and their ids to the list
+        // Check which boxes were checked and add their ids to the list
         var roles = [];
         for (i = 0; i<$scope.roleList.length; i++){
           var id = $scope.roleList[i].id;
@@ -264,7 +266,7 @@ angular
           Persons.newEventRole(member.person.id, member.event.id, data).then(success, error);
         }
         else{
-          alert("Debes seleccionar un rol antes de guardar");
+          alert("Debes seleccionar un rol antes de guardar o haz clik en libre o no convocado");
         }
 
       }
@@ -278,14 +280,7 @@ angular
 
     // Cancel the modal
     $scope.cancel = function(){
-      // Warn the user to save changes before leaving
-      if ($scope.mForm.$dirty){
-        alert("Debes guardar los cambios");
-      }
-
-      else{
-        $modalInstance.dismiss('cancel');
-      }
+      $modalInstance.dismiss('cancel');
     }
 
     $scope.assigned = function(id){
@@ -295,8 +290,7 @@ angular
           var assigned = member.event.roles[j].id;
 
           if (assigned == id){
-            // Set the checkbox to checked
-            console.log('Assigned:' + id);
+            // Role has been assigned to member
             return true;
           }
         }
