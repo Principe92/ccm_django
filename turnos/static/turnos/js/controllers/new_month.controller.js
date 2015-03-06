@@ -10,7 +10,7 @@ angular
 
   new_monthCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id'];
   new_roleCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id'];
-  new_eventCtrl.$inject = ['$scope', '$modalInstance', 'Groups', 'group_id', 'defForm', 'defLoad', 'calendar_id'];
+  new_eventCtrl.$inject = ['$filter','$scope', '$modalInstance', 'Groups', 'group_id', 'defForm', 'defLoad', 'calendar_id'];
   new_groupCtrl.$inject = ['$scope', '$modalInstance', 'Groups'];
   person_roleCtrl.$inject = ['$scope', '$modalInstance', 'Persons', 'roles', 'member'];
   DialogCtrl.$inject = ['$scope', '$modalInstance', 'message'];
@@ -93,14 +93,14 @@ angular
     }
   }
 
-  function new_eventCtrl($scope, $modalInstance, Groups, group_id, defForm, defLoad, calendar_id){
+  function new_eventCtrl($filter, $scope, $modalInstance, Groups, group_id, defForm, defLoad, calendar_id){
     console.log(defForm);
 
-    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-    $scope.format = $scope.formats[0];
+    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd/MM/yyyy', 'shortDate'];
+    $scope.format = $scope.formats[2];
 
     $scope.today = function() {
-      $scope.dt = new Date(); //$filter('date')(new Date(),$scope.format);
+      $scope.dt = $filter('date')(new Date(), $scope.format);
     };
 
     $scope.clear = function () {
@@ -112,10 +112,8 @@ angular
       return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
     };
 
-    $scope.toggleMin = function() {
-      $scope.minDate = $scope.minDate ? null : new Date();
-    };
-    $scope.toggleMin();
+    // Set minimum date to null
+    $scope.minDate = null;
 
     $scope.open = function($event) {
       $event.preventDefault();
@@ -141,10 +139,12 @@ angular
 
     // Check if we are being called to update an event
     if (defLoad.update){
+      var datetime = new Date(defForm.date);
+      
       $scope.event_title = defForm.title;
       $scope.event_id = defForm.number;
-      $scope.dt = defForm.date;
-      $scope.mytime = defForm.date;
+      $scope.dt = $filter('date')(datetime, $scope.format);
+      $scope.mytime = datetime;
     }
     else{
       $scope.mytime = new Date();
@@ -153,9 +153,11 @@ angular
 
     // Submit new event form
     $scope.submit = function(){
-      var day = $scope.dt.getDate();
-      var month = $scope.dt.getMonth() + 1;
-      var year = $scope.dt.getFullYear();
+      var formDate = new Date($scope.dt);
+
+      var day = formDate.getDate();
+      var month = formDate.getMonth() + 1;
+      var year = formDate.getFullYear();
 
       var hour = $scope.mytime.getHours();
       var minute = $scope.mytime.getMinutes();
@@ -168,7 +170,11 @@ angular
                     title : $scope.event_title,
                     id : parseInt($scope.event_id, 10)};
 
-      Groups.newEvent(group_id, calendar_id, data).then(success, error);
+      if (defLoad.update){
+        Groups.upEvent(defLoad.id, data).then(updateSuccess, error);
+      } else{
+        Groups.newEvent(group_id, calendar_id, data).then(success, error);
+      }
     }
 
     // Clear new event form
@@ -178,6 +184,11 @@ angular
 
     function success(data, status, headers, config){
       console.log('New event created !!');
+      $modalInstance.close(data);
+    }
+
+    function updateSuccess(data, status, headers, config){
+      console.log('event updated !!');
       $modalInstance.close(data);
     }
 
@@ -247,7 +258,7 @@ angular
     $scope.submit = function (){
 
       // If we changed something in the form
-      if ($scope.mForm.$dirty && $scope.mForm.$valid){
+    //  if ($scope.mForm.$dirty && $scope.mForm.$valid){
         console.log('form is dirty');
 
         // Check which boxes were checked and add their ids to the list
@@ -269,12 +280,12 @@ angular
           alert("Debes seleccionar un rol antes de guardar o haz clik en libre o no convocado");
         }
 
-      }
+    //  }
 
-      // We didn't change anything in the form, so just close
+      /*// We didn't change anything in the form, so just close
       else{
         $modalInstance.dismiss('cancel');
-      }
+      } */
 
     }
 
@@ -286,7 +297,6 @@ angular
     $scope.assigned = function(id){
         // Check if role is in the list of the roles of the member
         for (j = 0; j < member.event.roles.length; j++){
-          console.log('Index: ' + j);
           var assigned = member.event.roles[j].id;
 
           if (assigned == id){
@@ -300,6 +310,7 @@ angular
 
     function success(data, status, headers, config){
      console.log('roles modified !!');
+     console.log(data, member.person.id, member.event.id);
      $modalInstance.close(data);
     }
 

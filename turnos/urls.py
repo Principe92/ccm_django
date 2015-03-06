@@ -4,6 +4,7 @@ from turnos.api import DepartmentList, GroupMemberAPI
 from turnos.api import GroupListAPI, GroupDetailAPI, GroupScheduleAPI, GroupEventAPI, GroupRolesAPI
 from turnos.api import PersonListAPI, PersonEventRolesAPI
 from turnos.api import RoleListAPI
+from turnos.api import EventAPI
 from turnos.views import DepartmentViewSet, IndexView, EachDepartmentViewSet, GroupBaseView
 from turnos.views import PersonBaseView
 from rest_framework_nested import routers
@@ -47,6 +48,7 @@ api_url = patterns('',
   url(r'^department/$', GroupListAPI.as_view(), name='group_listAPI'),
 
   url(r'^event/(?P<group_pk>\d+)/calendar/(?P<calendar_pk>\d+)/$', GroupEventAPI.as_view(), name='group_eventAPI'),
+  url(r'^event/(?P<event_pk>\d+)/$', EventAPI.as_view(), name='event_API'),
 
   url(r'^person/$', PersonListAPI.as_view(), name='person_listAPI'),
   url(r'^person/(?P<person_pk>\d+)/event/(?P<event_pk>\d+)/roles/$', PersonEventRolesAPI.as_view(), name="person_eventAPI"),

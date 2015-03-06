@@ -26,6 +26,8 @@
             <li><a ng-click="openNewMonth()" href="#">Nuevo mes</a></li>
             <li class="divider"></li>
             <li><a ng-click="openNewRole()" href="#">Nuevo rol</a></li>
+            <li class="divider"></li>
+            <li><a ng-click="openNewRole()" href="#">Añadir miembro</a></li>
           </ul>
         </li>
 
@@ -112,8 +114,8 @@
                 <span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
               </a>
               <ul class="dropdown-menu" role="menu">
-                <li role="presentation"><a role="menuitem" id="{$ event.id $}" tabindex="-1" ng-click="modifyEvent($event)" href="#">Editar</a></li>
-                <li role="presentation"><a role="menuitem" id="{$ event.id $}" tabindex="-1" ng-click="deleteEvent($event)" href="#">Borrar</a></li>
+                <li role="presentation"><a role="menuitem" id="{$ event.id $}" tabindex="-1" ng-click="modifyEvent($event)" href="#">Modificar</a></li>
+                <li role="presentation"><a role="menuitem" id="{$ event.id $}" tabindex="-1" ng-click="deleteEvent($event)" href="#">Eliminar</a></li>
               </ul>
             </div>
           </div>

@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 
 from turnos.serializer import DepartmentS, RoleS, PersonS, CalendarS, EventS, EventIdS, EventRolesS
 from turnos.models import Department, Role, Person, Calendar, Event, EventId, EventRoles
@@ -31,10 +32,17 @@ class PersonEventRolesAPI(APIView):
 
   def post(self, request, person_pk, event_pk, format=None):
     data = request.data
+    print(data)
     roles = data.get('roles')
     person = get_object_or_404(Person, pk=person_pk)
     event = get_object_or_404(Event, pk=event_pk)
 
+    # Delete all roles in db but not in roles
+    obj = EventRoles.objects.filter(event=event, persons__pk=person_pk)
+
+    for item in obj:
+      if item.role not in roles:
+        item.persons.remove(person)
 
     for id in roles:
       post = get_object_or_404(Role, pk=id)
@@ -50,6 +58,7 @@ class PersonEventRolesAPI(APIView):
     snippet = EventRoles.objects.filter(event=event, persons__pk=person_pk)
     serializer = EventRolesS(snippet, many=True)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class PersonListAPI(APIView):
 
@@ -167,7 +176,7 @@ class GroupEventAPI(APIView):
       'calendar' : calendar_pk,
       'title' : title,
       'date' : event_time
-      }
+    }
     serializer = EventS(data=newEvent_data)
 
     if serializer.is_valid():
@@ -186,10 +195,7 @@ class GroupEventAPI(APIView):
         if idSerial.is_valid():
           savedEvent = get_object_or_404(Event, pk=savedEvent_pk)
           savedEvent_id = EventId(event=savedEvent, number=event_id)
-          savedEvent_id = savedEvent_id.save()
-
-          # Serialize the just stored event id
-          ser = EventIdS(savedEvent_id)
+          savedEvent_id.save()
 
           #combine with event details and serialize
           serializer = EventSerializer(savedEvent)
@@ -199,6 +205,86 @@ class GroupEventAPI(APIView):
           new_event = get_object_or_404(Event, pk=pk)
           new_event.delete()
           return Response(idSerial.errors, status=status.HTTP_400_BAD_REQUEST)
+
+      return Response(event, status=status.HTTP_201_CREATED)
+
+    # Error occurred
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class EventAPI(APIView):
+  def get(self, request, event_pk, format=None):
+    snippet = get_object_or_404(Event, pk=event_pk)
+    serializer = EventS(snippet, many=True)
+    return Response(serializer.data)
+
+  def delete(self, request, event_pk, format=None):
+    event = get_object_or_404(Event, pk=event_pk)
+
+    print('Over Here')
+
+    # Delete all the eventroles assigned to this event
+    event.roles.clear()
+
+    # Delete the event itself
+    event.delete()
+
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+  # Modifies an existing event
+  # Still unable to save one to one serializer object
+  def put(self, request, event_pk, format=None):
+    # Confirm that pk exists
+    event = get_object_or_404(Event, pk=event_pk)
+
+    time = datetime.time(request.data.get('hour'), request.data.get('minute'), 0, 0)
+    date = datetime.date(request.data.get('year'), request.data.get('month'), request.data.get('day'))
+    event_time = datetime.datetime.combine(date, time)
+    title = request.data.get('title', None)
+    event_id = request.data.get('id', None)
+
+    db_data = {
+      'department' : event.department.id,
+      'calendar' : event.calendar.id,
+      'title' : title,
+      'date' : event_time
+    }
+
+    serializer = EventS(event, data=db_data)
+
+    if serializer.is_valid():
+      serializer.save()
+
+      if event_id:
+        db_data = {
+          'event' : event.id,
+          'number' : event_id
+        }
+
+        if hasattr(event, 'event_number'):
+          idSerial = EventIdS(event, data=db_data)
+          if idSerial.is_valid():
+            eventID = event.event_number
+            eventID.number = event_id
+            eventID.save()
+
+          else:
+            # An error occurred while updating event number
+            return Response(idSerial.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+          idSerial = EventIdS(data=db_data)
+          if idSerial.is_valid():
+            eventID = EventId(event=event, number=event_id)
+            eventID.save()
+
+          else:
+            # An error occurred while updating event number
+            return Response(idSerial.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+        #event = get_object_or_404(Event, pk=event_pk)
+        serializer = EventSerializer(event)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
       return Response(event, status=status.HTTP_201_CREATED)
 

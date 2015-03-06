@@ -21,6 +21,8 @@ function Groups($http, djangoUrl, $q) {
     memberList : getMemberList,
     roles : getRoles,
     newEvent : newEvent,
+    delEvent: delEvent,
+    upEvent: upEvent,
     newSchedule : newSchedule,
     newRole : newRole
   };
@@ -35,6 +37,13 @@ function Groups($http, djangoUrl, $q) {
   * @returns {Promise}
   * @memberOf turnos.group.services.Groups
   */
+  function delEvent(event_pk){
+    return $http.delete(djangoUrl.reverse('ccm:event_API', [event_pk]), {});
+  }
+
+  function upEvent(event_pk, data){
+    return $http.put(djangoUrl.reverse('ccm:event_API', [event_pk]), data);
+  }
 
   function newRole(group_pk, data){
     return $http.post(djangoUrl.reverse('ccm:group_rolesAPI', [group_pk]), data);

@@ -38,7 +38,10 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
   $scope.eventList = events;
 
   $scope.defEvent = {};
-  $scope.update = {'update': false};
+  $scope.update = {
+    'update': false,
+    'id': 0
+  };
 
   // Create table object
   $scope.turnTable = [];
@@ -123,7 +126,14 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
         console.log(data.data);
 
         // Save new data
-        saveEvent(data.data);
+        if (!$scope.update.update){
+          saveEvent(data.data);
+        }
+
+        else {
+          var get_index = getEventIndexX(data.data.id);
+          $scope.eventList[get_index] = data.data;
+        }
 
         // Disable update
         $scope.update.update = false;
@@ -173,7 +183,8 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
 
     instance.result.then(
       function(data){
-        console.log('New role', data);
+        console.log(data, person_id, event_id);
+        saveRoles(data.data, person_id, event_id);
       },
 
       function (){}
@@ -183,12 +194,15 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
   $scope.deleteEvent = function(event){
     var dom = event.currentTarget.id;
 
+
     // Find the event with the id
     for (i = 0; i < events.length; i++){
       if (dom == events[i].id){
-        var number = events[i].event_number.number;
+        var mEvent = events[i];
       }
     }
+
+    var number = mEvent.event_number.number;
 
     var instance = $modal.open({
       templateUrl: '/ccm/modal/view/dialog.html/',
@@ -206,7 +220,9 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
 
     instance.result.then(
       function(){
-        console.log('El evento será eliminado');
+        removeEvent(mEvent.id);
+
+        Groups.delEvent(mEvent.id).then(delSuccess, delError);
       },
 
       function(){}
@@ -229,6 +245,7 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
     }
 
     $scope.update.update = true;
+    $scope.update.id = dom;
     $scope.openNewEvent(); // Call the modal to that creates new events
   }
 
@@ -337,6 +354,94 @@ function myGroupJSControl($rootScope, $scope, $http, Groups, $log,
       // Add a new event column to the member
       $scope.turnTable[i].events.push(eventBody);
     }
+  }
+
+  function saveRoles(data, person_id, event_id){
+    var roles = [];
+    var i = 0;
+    for (i; i < data.length; i++){
+      var rol = getRole(data[i].role);
+      roles.push(rol);
+    }
+
+    console.log('New Roles: ', roles);
+    console.log('id: ', data.length);
+
+    person_index = getPersonIndex(person_id);
+    event_index = getEventIndex(person_index, event_id);
+    $scope.turnTable[person_index].events[event_index].roles = roles;
+  }
+
+  // Get the id and title of a role given its id
+  function getRole(id){
+    var i = 0;
+    for(i = 0; i < roles.length; i++){
+      if (id == roles[i].id){
+        return {
+          'id': roles[i].id,
+          'title': roles[i].title
+        };
+      }
+    }
+  }
+
+  // Get the index of a person from turnTable given its id
+  function getPersonIndex(person_id){
+    var i = 0;
+    for(i = 0; i < $scope.turnTable.length; i++){
+      if (person_id == $scope.turnTable[i].id){
+        return i;
+      }
+    }
+  }
+
+  // Get the index of a person from turnTable given its id
+  function getEventIndex(person_index, event_id){
+    var i = 0;
+    for(i = 0; i < $scope.turnTable[person_index].events.length; i++){
+      if (event_id == $scope.turnTable[person_index].events[i].id){
+        return i;
+      }
+    }
+  }
+
+  function getEventIndexX(event_id){
+    var i = 0;
+    for(i; i < $scope.eventList.length; i++){
+      if (event_id == $scope.eventList[i].id){
+        return i;
+      }
+    }
+  }
+
+  // Method to remove an event column with all roles in turnTable
+  function removeEvent(event_id){
+    // Remove event from turnTable
+    var i = 0;
+    for(i; i < $scope.turnTable.length; i++){
+      // Find index of event array for each person
+      var eventIndex = getEventIndex(i, event_id);
+
+      // Delete event roles
+      $scope.turnTable[i].events.splice(eventIndex, 1);
+    }
+
+    // Remove event
+    i = 0;
+    for(i; i < $scope.eventList.length; i++){
+      if (event_id == $scope.eventList[i].id){
+        $scope.eventList.splice(i, 1);
+        i = $scope.eventList.length;
+      }
+    }
+  }
+
+  function delSuccess(data, status, headers, config){
+    console.log('Successfully eliminated event');
+  }
+
+  function delError(data, status, headers, config){
+    console.log('Error deleting event');
   }
 }
 
