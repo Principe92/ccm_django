@@ -9,6 +9,7 @@
   <title>{% block title %}{% endblock %}</title>
   <link rel="stylesheet" type="text/css" href="{% static "djangular/css/bootstrap3.css" %}">
   <link rel="stylesheet" type="text/css" href="{% static "admin/css/animation.css" %}" />
+  <link rel="stylesheet" type="text/css" href="{% static "turnos/css/style.css" %}"/>
   <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}" />
   <link rel="stylesheet" type="text/css" href="{% block mainsheet %}{% static "admin/css/main.css" %}{% endblock %}" />
   <link rel="stylesheet" type="text/css" charset="utf-8" href="{% block fontsheet %}{% static "admin/css/fonts.css" %}{% endblock %}" />
@@ -121,7 +122,7 @@
 
               <!-- row 3 -->
               <li>
-                <a href="{% url 'ccm:group_listView' %}">
+                <a href="{% url 'ccm:groups' %}">
                   <div class="menu_element">
                     <p><img class="menu_icon actionbar_icon" src="/static/admin/img/ic_group_work_white_18dp.png"></img>
                       <span style="color: white;">Departamento</span>
@@ -132,7 +133,7 @@
 
               <!-- row 3 -->
               <li>
-                <a href="{% url 'person_index' %}">
+                <a href="{% url 'ccm:persons' %}">
                   <div class="menu_element">
                     <p><img class="menu_icon actionbar_icon" src="/static/admin/img/ic_person_white_18dp.png"></img>
                       <span style="color: white;">Personas</span>

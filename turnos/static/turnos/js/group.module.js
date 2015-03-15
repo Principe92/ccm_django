@@ -4,5 +4,6 @@ angular.module('turnos.group', [
 
 function init($http, $cookies){
   $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
+  
   console.log('csrftoken: ' + $cookies.csrftoken);
 };

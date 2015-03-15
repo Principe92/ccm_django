@@ -1,14 +1,15 @@
-import datetime
+import datetime, json
 from rest_framework import generics, permissions
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 
-from turnos.serializer import DepartmentS, RoleS, PersonS, CalendarS, EventS, EventIdS
-from turnos.models import Department, Role, Person, Calendar, Event, EventId
-from turnos.serializer import EventSerializer
+from turnos.serializer import DepartmentS, RoleS, PersonS, CalendarS, EventS, EventIdS, EventRolesS
+from turnos.models import Department, Role, Person, Calendar, Event, EventId, EventRoles
+from turnos.serializer import EventSerializer, GroupSerializer
 
 
 class DepartmentList(generics.ListCreateAPIView):
@@ -17,12 +18,110 @@ class DepartmentList(generics.ListCreateAPIView):
 
 
   def perform_create(self, serializer):
-    print(serializer.data)
     serializer.save()
 
 class GroupDetailAPI(generics.RetrieveUpdateDestroyAPIView):
-  serializer_class = DepartmentS
+  serializer_class = GroupSerializer
   queryset = Department.objects.all()
+
+class PersonEventRolesAPI(APIView):
+  def get(self, request, person_pk, event_pk, format=None):
+    snippet = EventRoles.objects.filter(event__pk=event_pk, persons__pk=person_pk)
+    serializer = EventRolesS(snippet, many=True)
+    return Response(serializer.data)
+
+  def post(self, request, person_pk, event_pk, format=None):
+    data = request.data
+    print(data)
+    roles = data.get('roles')
+    person = get_object_or_404(Person, pk=person_pk)
+    event = get_object_or_404(Event, pk=event_pk)
+
+    # Delete all roles in db but not in roles
+    obj = EventRoles.objects.filter(event=event, persons__pk=person_pk)
+
+    for item in obj:
+      if item.role not in roles:
+        item.persons.remove(person)
+
+    for id in roles:
+      post = get_object_or_404(Role, pk=id)
+
+      try:
+        arg = EventRoles.objects.get(event=event, role=post)
+        arg.persons.add(person)
+
+      except (KeyError, EventRoles.DoesNotExist):
+        arg = EventRoles.objects.create(event=event, role=post)
+        arg.persons.add(person)
+
+    snippet = EventRoles.objects.filter(event=event, persons__pk=person_pk)
+    serializer = EventRolesS(snippet, many=True)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class PersonListAPI(APIView):
+
+  def get(self, request, format=None):
+    snippets = Person.objects.all()
+    serializer = PersonS(snippets, many=True)
+    return Response(serializer.data)
+
+  def post(self, request, format=None):
+    data = request.data
+    new_data = {
+      'name' : data.get('name'),
+      'first_surname' : data.get('first_surname'),
+      'second_surname' : data.get('second_surname', '' ),
+      'email' : data.get('email', ''),
+      'address' : data.get('address', ''),
+      'pbox' : data.get('pbox', ''),
+      'city' : data.get('city', ''),
+      'province' : data.get('province', ''),
+      'country' : data.get('country', ''),
+      'number' : data.get('number', ''),
+      'nationality' : data.get('nationality', ''),
+    }
+
+    serializer = PersonS(data = new_data)
+
+    if serializer.is_valid():
+      serializer.save()
+
+      new_person = Person.objects.get(pk=serializer.data.get('id'))
+
+      for i in data.get('department'):
+        group = get_object_or_404(Department, pk=i)
+        new_person.department.add(group)
+
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class RoleListAPI(generics.ListAPIView):
+  serializer_class = RoleS
+  queryset = Role.objects.all()
+
+class GroupRolesAPI(APIView):
+
+  def get(self, request, group_pk, format=None):
+    department = get_object_or_404(Department, pk=group_pk)
+    snippets = Role.objects.filter(department=department)
+    serializer = RoleS(snippets, many=True)
+    return Response(serializer.data)
+
+  def post(self, request, group_pk, format=None):
+    data = request.data
+
+    serializer = RoleS(data=data)
+
+    if serializer.is_valid():
+      serializer.save()
+
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    # Error occurred
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GroupScheduleAPI(APIView):
 
@@ -45,10 +144,8 @@ class GroupScheduleAPI(APIView):
                                   'department' : group_pk,
                                   'observation' : observation})
 
-    print('Over Here')
     if serializer.is_valid():
       serializer.save()
-      print('new calendar created')
 
       return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -60,11 +157,11 @@ class GroupEventAPI(APIView):
   def get(self, request, group_pk, calendar_pk, format=None):
     calendar = get_object_or_404(Calendar, pk=calendar_pk)
     snippets = Event.objects.filter(calendar=calendar)
-    serializer = EventS(snippets, many=True)
+    serializer = EventSerializer(snippets, many=True)
     return Response(serializer.data)
 
+  # Adds new event to a particular calendar(month) of certain department
   def post(self, request, group_pk, calendar_pk, format=None):
-    print(request.data)
     # Confirm that pk exists
     calendar = get_object_or_404(Calendar, pk=calendar_pk)
 
@@ -79,7 +176,7 @@ class GroupEventAPI(APIView):
       'calendar' : calendar_pk,
       'title' : title,
       'date' : event_time
-      }
+    }
     serializer = EventS(data=newEvent_data)
 
     if serializer.is_valid():
@@ -98,10 +195,7 @@ class GroupEventAPI(APIView):
         if idSerial.is_valid():
           savedEvent = get_object_or_404(Event, pk=savedEvent_pk)
           savedEvent_id = EventId(event=savedEvent, number=event_id)
-          savedEvent_id = savedEvent_id.save()
-
-          # Serialize the just stored event id
-          ser = EventIdS(savedEvent_id)
+          savedEvent_id.save()
 
           #combine with event details and serialize
           serializer = EventSerializer(savedEvent)
@@ -113,6 +207,92 @@ class GroupEventAPI(APIView):
           return Response(idSerial.errors, status=status.HTTP_400_BAD_REQUEST)
 
       return Response(event, status=status.HTTP_201_CREATED)
+
+    # Error occurred
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class EventAPI(APIView):
+  def get(self, request, event_pk, format=None):
+    snippet = get_object_or_404(Event, pk=event_pk)
+    serializer = EventS(snippet, many=True)
+    return Response(serializer.data)
+
+  def delete(self, request, event_pk, format=None):
+    event = get_object_or_404(Event, pk=event_pk)
+
+    print('Over Here')
+
+    # Delete all the eventroles assigned to this event
+    event.roles.clear()
+
+    # Delete the event itself
+    event.delete()
+
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+  # Modifies an existing event
+  # Still unable to save one to one serializer object
+  def put(self, request, event_pk, format=None):
+    # Confirm that pk exists
+    event = get_object_or_404(Event, pk=event_pk)
+
+    time = datetime.time(request.data.get('hour'), request.data.get('minute'), 0, 0)
+    date = datetime.date(request.data.get('year'), request.data.get('month'), request.data.get('day'))
+    event_time = datetime.datetime.combine(date, time)
+    title = request.data.get('title', None)
+    event_id = request.data.get('id', None)
+
+    db_data = {
+      'department' : event.department.id,
+      'calendar' : event.calendar.id,
+      'title' : title,
+      'date' : event_time
+    }
+
+    serializer = EventS(event, data=db_data)
+
+    if serializer.is_valid():
+      new_event = serializer.save()
+
+      if event_id:
+        db_dataX = {
+          'event' : event.id,
+          'number' : event_id
+        }
+
+        # Does event have an id in db
+        if hasattr(event, 'event_number'):
+          idSerial = EventIdS(new_event, data=db_dataX)
+          if idSerial.is_valid():
+            idSerial.save()
+
+            sr = EventSerializer(event)
+            print(sr.data.get('event_number'))
+            return Response(sr.data, status=status.HTTP_201_CREATED)
+
+          else:
+            # An error occurred while updating event number
+            return Response(idSerial.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+          idSerial = EventIdS(data=db_dataX)
+          if idSerial.is_valid():
+            idSerial.save()
+            #eventID = EventId(event=event, number=event_id)
+            #eventID.save()
+
+          else:
+            # An error occurred while updating event number
+            return Response(idSerial.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+        event = get_object_or_404(Event, pk=event_pk)
+        serializer = EventSerializer(event)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+      event = get_object_or_404(Event, pk=event_pk)
+      serializer = EventSerializer(event)
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     # Error occurred
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -137,7 +317,6 @@ class GroupListAPI(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-      print(request.data)
       # retrieve title
       department = {'title' : request.data.get('title')}
 
@@ -153,9 +332,8 @@ class GroupListAPI(APIView):
         # Check if we have new roles to save
         if 'newRole_1' in request.data:
           role = {'title' : request.data.get('newRole_1'), 'department': pk}
-
           rolS = RoleS(data=role)
-          print('Over Here')
+
           if rolS.is_valid():
             rolS.save()
           else:
@@ -182,15 +360,6 @@ class GroupListAPI(APIView):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class DepartmentRoles(generics.ListCreateAPIView):
-  model = Role
-  serializer_class = RoleS
-
-  def get_queryset(self):
-    queryset = super(DepartmentRoles, self).get_queryset()
-    return queryset.filter(department__id=self.kwargs.get('pk'))
 
 
 class RoleList(generics.ListCreateAPIView):

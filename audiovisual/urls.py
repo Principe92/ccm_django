@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from audiovisual import views
-from turnos.views import GroupListView
 
 urlpatterns = patterns('',
     # Examples:
@@ -29,7 +28,7 @@ urlpatterns = patterns('',
 
     # URL for DEPARTMENTS
     # ex: /admin/department/
-    url(r'^admin/departments/$', GroupListView.as_view(), name='department_index'),
+    #url(r'^admin/departments/$', GroupListView.as_view(), name='department_index'),
     # ex: /admin/department/members
     url(r'^admin/departments/(?P<pk>\d+)/members/$', 'audiovisual.views.DepartmentPerson', name='department_members'),
     # ex: /admin/department/roles/5

@@ -4,30 +4,30 @@
 
       <ul class="nav navbar-nav navbar-right">
         <!-- Turnos -->
-        <li class="dropdown">
+        <li class="dropdown active" id="turns_menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Turnos <span class="caret"></span></a>
           <ul class="dropdown-menu list-group" role="menu">
             <li class="list-group-item" ng-repeat="turn in scheduleList">
-              <a href="/ccm/department/{$ turn.department $}/turns/{$ turn.id $}">Action</a>
+              <a href="/ccm/department/{$ group_id $}/turns/{$ turn.id $}/">{$ monthNames[$index] $}</a>
             </li>
           </ul>
         </li>
 
         <!-- Miembros -->
-        <li><a href="/ccm/department/{$ group_id $}/members">Miembros</a></li>
+        <li><a href="/ccm/department/{$ group_id $}/members/">Miembros</a></li>
 
         <!-- Roles -->
-        <li><a href="/ccm/department/{$ group_id $}/roles">Roles</a></li>
+        <li><a href="/ccm/department/{$ group_id $}/roles/">Roles</a></li>
 
         <!-- Turnos -->
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a ng-click="show_monthForm = !show_monthForm" href="#">Nuevo mes</a></li>
+            <li><a ng-click="openNewMonth()" href="#">Nuevo mes</a></li>
             <li class="divider"></li>
-            <li><a href="#">Nuevo rol</a></li>
+            <li><a ng-click="openNewRole()" href="#">Nuevo rol</a></li>
             <li class="divider"></li>
-            <li><a href="#">Añadir miembro</a></li>
+            <li><a ng-click="openNewRole()" href="#">Añadir miembro</a></li>
           </ul>
         </li>
 
@@ -35,11 +35,38 @@
     </div>
 
     </div>
-  </div>
 </nav>
 
 
 <div id="content">
+
+  <div class="modal fade" id="observation" tabIndex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalLabel"> Observación </h3>
+        </div>
+
+        <div class="modal-body">
+          <form class="form-horizontal" name="form" accept-charset="UTF-8" autocomplete="off">
+            <div class="form-group center-block">
+              <label class="col-sm-1 control-label" for="set_observation">Notas</label>
+              <div class="col-xs-8">
+                <textarea id="set_observation" name="observation" class="form-control" rows="3" ng-model="observation"></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary btn-sm" ng-click="submit()">Guardar</button>
+          <button type="button" class="btn btn-danger btn-sm" ng-click="clean()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- BEGIN DEPARTMENT LIST -->
   <div class="panel panel-default">
@@ -48,34 +75,67 @@
 
         <!-- BEGIN CONTENT HEADER -->
         <h1 class="navbar-text navbar-left create_title">
-          TURNOS
+          {$ currentMonth $}
         </h2>
         <!-- END CONTENT HEADER -->
 
         <ul class="nav navbar-nav navbar-right">
 
+          <!-- Add member to monthly turn -->
+          <li>
+            <a data-toggle="modal" data-target="#observation" href="#"> Observaciónes </a>
+          </li>
+
           <!-- Nuevo event -->
-          <li><a ng-click="show_eventForm = !show_eventForm" href="#"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Nuevo evento</a></li>
+          <li>
+            <a ng-click="openNewEvent()" href="#">
+              <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Nuevo evento
+            </a>
+          </li>
+
+          <!-- Add member to monthly turn -->
+          <li>
+            <a ng-click="openNewEvent()" href="#">
+              <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Añadir miembro
+            </a>
+          </li>
         </ul>
       </div>
     </nav>
 
-      <div class="row_item teal_300">
-        <p class="person"> OBRERO </p>
-      </div>
+    <!--<div class="table-responsive">
+      <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th> TECNICOS </th>
+              <th ng-repeat="event in eventList">
+                  <p> {$ event.title $} </p>
+                  <p> {$ event.date $} </p>
+              </th>
+            </tr>
+          </thead>
 
+          <tbody>
+            <tr ng-repeat="member in memberList">
+              <td>
+                <p>{$ member.name $} {$ member.first_surname $}</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div> -->
 
-    </div>
-  <!-- Form to create new month -->
-  <div class="panel panel-primary" collapse="show_monthForm">
-    <!-- BEGIN CREATE NEW CONTENT -->
-    <div class="panel-heading">
-      <!-- BEGIN CONTENT HEADER -->
-      <h3 class="panel-title">
-        NUEVO MES
-      </h3>
-    </div>
+<<<<<<< HEAD
+=======
+      <div class="container-fluid">
 
+        <div class="row box">
+          <div class="col-md-2"><p> TECNICOS </p></div>
+>>>>>>> testing
+
+          <div class="col-md-2" ng-repeat="event in eventList">
+
+<<<<<<< HEAD
       <!-- END CONTENT HEADER -->
       <!-- BEGIN CONTENT DETAILS -->
       <div id="create_body">
@@ -90,22 +150,29 @@
                 </select>
               </div>
               <p class="form-control-static">{$ year $}</p>
+=======
+            <div>
+              {$ event.event_number.number $}
+>>>>>>> testing
+            </div>
+            <div>
+              {$ event.title $}
             </div>
 
-          <div class="form-group center-block">
-            <label class="col-sm-1 control-label" for="set_observation">Notas</label>
-            <div class="col-xs-4">
-              <textarea id="set_observation" name="observation" class="form-control" rows="3" ng-model="observation"></textarea>
-            </div>
-          </div>
+            <div> {$ event.date | date : "dd-MMMM-yyyy" : "UTC" $}</div>
+            <div class="event_title"> {$ event.date | date : "h:mma" : "UTC" $}</div>
 
-          <!-- BUTTON BOX -->
-          <div class="form-group">
-            <div class="col-sm-offset-1 col-sm-10">
-              <button type="submit" class="btn btn-primary btn-sm" ng-click="submitMonthForm()">Crear</button>
-              <button type="button" class="btn btn-sm btn-danger" ng-click="clearMonthForm()">Cancelar</button>
+            <div class="dropdown event_menu_icon">
+              <a id="{$ 'id_' + event.id $}" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
+                <span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li role="presentation"><a role="menuitem" id="{$ event.id $}" tabindex="-1" ng-click="modifyEvent($event)" href="#">Modificar</a></li>
+                <li role="presentation"><a role="menuitem" id="{$ event.id $}" tabindex="-1" ng-click="deleteEvent($event)" href="#">Eliminar</a></li>
+              </ul>
             </div>
           </div>
+<<<<<<< HEAD
         </form>
         <!-- END FORM -->
       </div>
@@ -146,45 +213,26 @@
             <span id="help" class="help-block input-sm">Ejemplo: Domingo 1&ordf; Reunion</span>
           </div>
           <!-- Don't forget to add a dropdown to the right of the form field -->
+=======
+>>>>>>> testing
         </div>
 
-        <div class="form-group form-group-sm">
-          <label class="col-sm-2 control-label" for="event_date">Fecha:</label>
-          <div class="col-xs-4">
-            <p class="input-group">
-              <input type="text" id="event_date" class="form-control input-sm" datepicker-popup="{$ format $}"
-              ng-model="dt" is-open="opened"
-              min-date="minDate" datepicker-options="dateOptions"
-               ng-required="true" close-text="Close" />
+        <div class="row box" ng-repeat="member in turnTable">
+          <div class="col-md-2"> <p>{$ member.name $} {$ member.first_surname $} </p></div>
 
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-            </p>
+          <div class="col-md-2" ng-repeat="event in member.events">
+
+            <ul class="list-group">
+              <li class="list-group-item" ng-repeat="post in event.roles"> {$ post.title $} </li>
+            </ul>
+
+            <div class="modifyRoleIcon" id="role_menu">
+              <a id="{$ 'who_' + member.id + '_event_' + event.id $}" href="#" ng-click="modifyRole($event)">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              </a>
+            </div>
           </div>
         </div>
-
-        <div class="form-group form-group-sm">
-          <label class="col-sm-2 control-label" for="event_time">Tiempo:</label>
-          <div class="col-xs-2">
-             <timepicker ng-required="true" ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
-          </div>
-        </div>
-
-        <!-- BUTTON BOX -->
-        <div class="row">
-          <div class="col-sm-offset-1 col-sm-10">
-            <button type="submit" class="btn btn-primary btn-sm" ng-click="submitEventForm()">Crear</button>
-            <button class="btn btn-info btn-sm" ng-click="toggleMode()">12H / 24H</button>
-            <button type="button" class="btn btn-sm btn-danger" ng-click="clearEventForm()">Cancelar</button>
-          </div>
-        </div>
-
-      </form>
-    <!-- END FORM -->
-  </div>
-  <!-- END CONTENT DETAILS -->
-  </div>
-  <!-- END CREATE NEW CONTENT -->
-  <!-- END CREATE NEW BOX -->
+      </div>
+    </div>
 </div>

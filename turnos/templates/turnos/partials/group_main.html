@@ -1,14 +1,19 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <div class="collapse navbar-collapse">
 
-    {% block nav-global %}{% endblock %}
+      <ul class="nav navbar-nav navbar-right">
+
+        <!-- New group -->
+        <li><a ng-click="openNewGroup()" href="#"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Nuevo </a></li>
+      </ul>
 
     </div>
   </div>
 </nav>
 
 <div id="content">
+<<<<<<< HEAD
 <a class="new" ng-click="show_form = !show_form" ng-model="create_new">
   <div class="action_button button_fixed">
       <img class="action_image" width="24" height="24" src="/static/admin/img/ic_add_white_18dp.png"></img>
@@ -85,6 +90,8 @@
   <!-- END CREATE NEW CONTENT -->
 </div>
 <!-- END CREATE NEW BOX -->
+=======
+>>>>>>> testing
 
 <!-- BEGIN DEPARTMENT LIST -->
 <div class="create_box dpt_list">
@@ -154,8 +161,11 @@
         </div>
       </div>
 
+<<<<<<< HEAD
     <!-- END OF LIST -->
   </div>
 </div>
 <!-- END DEPARTMENT LIST -->
+=======
+>>>>>>> testing
 </div>

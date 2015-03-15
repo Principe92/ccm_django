@@ -1,0 +1,19 @@
+<div class="modal-content">
+  <!-- Modal head -->
+  <div class="modal-header" ng-show="headVisible">
+    <h3 class="modal-title">
+      {$ msgHead $}
+    </h3>
+  </div>
+
+  <!-- Modal body -->
+  <div class="modal-body" ng-show="bodyVisible">
+    <p> {$ msgBody $} </p>
+  </div>
+
+  <!-- Modal footer -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">Cancelar</button>
+    <button type="button" class="btn btn-danger btn-sm" ng-click="eliminate()">Eliminar</button>
+  </div>
+</div>

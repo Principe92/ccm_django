@@ -20,18 +20,23 @@ from turnos.serializer import DepartmentS
 
 from audiovisual.forms import FormEvent
 
-class GroupListView(TemplateView):
-  template_name = 'admin/department_index.html'
-  form = DepartmentForm()
+class GroupBaseView(TemplateView):
+  template_name = 'turnos/base_group.html'
+  #form = DepartmentForm()
 
   def get_context_data(self, *args, **kwargs):
-    context = super(GroupListView, self).get_context_data(**kwargs)
-    context.update(form = self.form)
+    context = super(GroupBaseView, self).get_context_data(**kwargs)
+    #context.update(form = self.form)
     return context
 
-  @method_decorator(ensure_csrf_cookie)
-  def dispatch(self, *args, **kwargs):
-    return super(GroupListView, self).dispatch(*args, **kwargs)
+
+class PersonBaseView(TemplateView):
+  template_name = 'turnos/base_group.html'
+
+  def get_context_data(self, *args, **kwargs):
+    context = super(PersonBaseView, self).get_context_data(**kwargs)
+    return context
+
 
 """
 class GroupTurnView(TemplateView):

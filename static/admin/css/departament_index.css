@@ -66,22 +66,15 @@
   padding: 2px;
 }
 
-label, legend{
+/*label, legend{
   vertical-align: middle;
-  font-size: 12px;
+  font-size: 12px !important;
   font-style: normal;
   width: 4em;
   float: left;
   text-align: left;
   margin-left: 4px;
-}
-
-input[type=text]{
-  width: 20em;
-  display: inline-block;
-  vertical-align: middle;
-  margin: 0 8px;
-}
+} */
 
 .error{
   display: inline-block;

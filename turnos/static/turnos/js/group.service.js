@@ -13,14 +13,18 @@ function Groups($http, djangoUrl, $q) {
 
   var Groups = {
     all: all,
-    create: create,
+    newGroup: newGroup,
     get: get,
     list : list,
     scheduleList : getScheduleList,
     eventList : getEventList,
     memberList : getMemberList,
+    roles : getRoles,
     newEvent : newEvent,
-    newSchedule : newSchedule
+    delEvent: delEvent,
+    upEvent: upEvent,
+    newSchedule : newSchedule,
+    newRole : newRole
   };
 
   return Groups;
@@ -33,6 +37,29 @@ function Groups($http, djangoUrl, $q) {
   * @returns {Promise}
   * @memberOf turnos.group.services.Groups
   */
+  function delEvent(event_pk){
+    return $http.delete(djangoUrl.reverse('ccm:event_API', [event_pk]), {});
+  }
+
+  function upEvent(event_pk, data){
+    return $http.put(djangoUrl.reverse('ccm:event_API', [event_pk]), data);
+  }
+
+  function newRole(group_pk, data){
+    return $http.post(djangoUrl.reverse('ccm:group_rolesAPI', [group_pk]), data);
+  }
+
+  function getRoles(group_pk){
+    var defer = $q.defer()
+    $http.get(djangoUrl.reverse('ccm:group_rolesAPI', [group_pk]))
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      })
+      .error(function(data, status, headers, config){
+        defer.reject(status);
+      });
+    return defer.promise;
+  }
 
   function newEvent(group_pk, calendar_pk, data){
     console.log('group_pk: ' + group_pk);
@@ -113,12 +140,7 @@ function Groups($http, djangoUrl, $q) {
   * @returns {Promise}
   * @memberOf turnos.group.services.Groups
   */
-  function create(content) {
-    var data = {title : content.title,
-                newRole_1: content.newRole_1,
-                newRole_2: content.newRole_2,
-                newRole_3: content.newRole_3};
-
+  function newGroup(data) {
     return $http.post(djangoUrl.reverse('ccm:group_listAPI'), data);
   }
 

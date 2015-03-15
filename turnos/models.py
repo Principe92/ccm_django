@@ -29,7 +29,7 @@ class Person(models.Model):
     nationality = models.CharField(max_length=100, blank=True, default='')
     created = models.DateTimeField('date created', auto_now_add=True)
     updated = models.DateTimeField('date updated', auto_now=True)
-    department = models.ManyToManyField(Department, blank=True, related_name='members')
+    department = models.ManyToManyField(Department, related_name='members')
 
     class Meta:
       db_table = "person"
@@ -58,7 +58,8 @@ class Role(models.Model):
     title = models.CharField(max_length=20)
 
     class Meta:
-        db_table = "role"
+      db_table = "role"
+      unique_together = ("title", "department")
 
 # Calendar table - stores all the monthly calendars for each department
 class Calendar(models.Model):
@@ -66,7 +67,7 @@ class Calendar(models.Model):
     observation = models.TextField(default='', blank=True)
     created = models.DateTimeField('date created', auto_now_add=True)
     updated = models.DateTimeField('date updated', auto_now=True)
-    department = models.ForeignKey(Department)
+    department = models.ForeignKey(Department, related_name='calendars')
 
     def __unicode__(self):
         return self.month
@@ -81,7 +82,7 @@ class Calendar(models.Model):
 
 # Service table - stores all the schedule events
 class Event(models.Model):
-    calendar = models.ForeignKey(Calendar)
+    calendar = models.ForeignKey(Calendar, related_name='cal_event')
     department = models.ForeignKey(Department, related_name='events')
     title = models.CharField(max_length=30)
     date = models.DateTimeField('event date')
@@ -93,7 +94,7 @@ class Event(models.Model):
 
 # DVD Recording identification number - stores the id for each event
 class EventId(models.Model):
-    event = models.OneToOneField(Event, primary_key=True)
+    event = models.OneToOneField(Event, primary_key=True, related_name='event_number')
     number = models.IntegerField(default=0)
 
     class Meta:
@@ -116,9 +117,10 @@ class Response(models.Model):
 
 # Service Role table - stores all the roles assigned to each person
 class EventRoles(models.Model):
-    event = models.ForeignKey(Event)
-    role = models.ForeignKey(Role)
-    persons = models.ManyToManyField(Person)
+    event = models.ForeignKey(Event, related_name='eventList')
+    role = models.ForeignKey(Role, related_name='roleList')
+    persons = models.ManyToManyField(Person, related_name='memberList')
 
     class Meta:
         db_table = "event_roles"
+        unique_together = ("event", "role")

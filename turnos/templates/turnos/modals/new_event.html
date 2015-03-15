@@ -1,0 +1,69 @@
+<div class="modal-content">
+
+  <div class="modal-header">
+    <h3 class="modal-title"> Evento </h3>
+  </div>
+
+  <div class="modal-body">
+    <form class="form-horizontal" name="newEventForm" accept-charset="UTF-8" autocomplete="off">
+
+      <!-- ID -->
+      <div class="form-group form-group-sm">
+        <label class="col-sm-2 control-label" for="event_id"> Grabacion: </label>
+        <div class="col-xs-2 col-sm-4">
+          <input type="text" ng-model="event_id" id="event_id" class="form-control input-sm" aria-describedby="help" ng-required="true">
+          <span id="help" class="help-block input-sm">Ejemplo: 607</span>
+        </div>
+        <!-- Don't forget to add a dropdown to the right of the form field -->
+      </div>
+
+      <div class="form-group form-group-sm">
+        <label class="col-sm-2 control-label" for="event_title"> Titulo: </label>
+        <div class="col-xs-4 col-sm-6">
+          <input type="text" ng-model="event_title" id="event_title" class="form-control input-sm" placeholder="Ponga el titulo del evento" aria-describedby="help" ng-required="true">
+          <span id="help" class="help-block input-sm">Ejemplo: Domingo 1&ordf; Reunion</span>
+        </div>
+        <!-- Don't forget to add a dropdown to the right of the form field -->
+      </div>
+
+      <div class="form-group form-group-sm">
+        <label class="col-sm-2 control-label" for="event_date">Fecha:</label>
+        <div class="col-xs-4 col-sm-4">
+          <p class="input-group">
+            <input type="text" id="event_date" class="form-control input-sm" datepicker-popup="{$ format $}"
+            ng-model="dt" is-open="opened"
+            min-date="minDate" datepicker-options="dateOptions"
+            ng-required="true" close-text="Close" />
+
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <div class="form-group form-group-sm">
+        <label class="col-sm-2 control-label" for="event_time">Tiempo:</label>
+        <div class="col-xs-2">
+         <timepicker ng-required="true" ng-model="mytime" ng-change="changed()" hour-step="hstep"
+         minute-step="mstep" show-meridian="ismeridian"></timepicker>
+       </div>
+     </div>
+
+      <!-- BUTTON BOX -->
+    <div class="row">
+      <div class="col-sm-offset-1 col-sm-10">
+
+      </div>
+    </div>
+
+  </form>
+  </div>
+
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary btn-sm" ng-click="submit()">Guardar</button>
+    <button class="btn btn-default btn-sm" ng-click="toggleMode()">12H / 24H</button>
+    <button type="button" class="btn btn-danger btn-sm" ng-click="clean()">Cancelar</button>
+  </div>
+
+</div>
