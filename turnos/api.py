@@ -252,41 +252,47 @@ class EventAPI(APIView):
     serializer = EventS(event, data=db_data)
 
     if serializer.is_valid():
-      serializer.save()
+      new_event = serializer.save()
 
       if event_id:
-        db_data = {
+        db_dataX = {
           'event' : event.id,
           'number' : event_id
         }
 
+        # Does event have an id in db
         if hasattr(event, 'event_number'):
-          idSerial = EventIdS(event, data=db_data)
+          idSerial = EventIdS(new_event, data=db_dataX)
           if idSerial.is_valid():
-            eventID = event.event_number
-            eventID.number = event_id
-            eventID.save()
+            idSerial.save()
+
+            sr = EventSerializer(event)
+            print(sr.data.get('event_number'))
+            return Response(sr.data, status=status.HTTP_201_CREATED)
 
           else:
             # An error occurred while updating event number
             return Response(idSerial.errors, status=status.HTTP_400_BAD_REQUEST)
 
         else:
-          idSerial = EventIdS(data=db_data)
+          idSerial = EventIdS(data=db_dataX)
           if idSerial.is_valid():
-            eventID = EventId(event=event, number=event_id)
-            eventID.save()
+            idSerial.save()
+            #eventID = EventId(event=event, number=event_id)
+            #eventID.save()
 
           else:
             # An error occurred while updating event number
             return Response(idSerial.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-        #event = get_object_or_404(Event, pk=event_pk)
+        event = get_object_or_404(Event, pk=event_pk)
         serializer = EventSerializer(event)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-      return Response(event, status=status.HTTP_201_CREATED)
+      event = get_object_or_404(Event, pk=event_pk)
+      serializer = EventSerializer(event)
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     # Error occurred
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
